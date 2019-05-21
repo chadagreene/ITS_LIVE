@@ -1,0 +1,239 @@
+function zi = itslive_interp(variable,lati_or_xi,loni_or_yi,varargin)
+% interpolates ITS_LIVE velocity data to specified points. 
+% 
+%% Syntax
+% 
+%  zi = itslive_interp(variable,lati,loni)
+%  zi = itslive_interp(variable,xi,yi)
+%  zi = itslive_interp(...,'path',filepath) 
+%  zi = itslive_interp(...,'region',region)
+%  zi = itslive_interp(...,'method',InterpMethod) 
+%  zi = itslive_interp(...,'year',years) 
+% 
+%% Description 
+% 
+% zi = itslive_interp(variable,lati,loni) interpolates the specified ITS_LIVE
+% variable to the geo coordinate(s) lati,loni. The variable can be 'v', 'vx',
+% 'vy', 'vx_err', 'vy_err', 'v_err', 'date', 'dt', 'count', 'chip_size_max', 
+% 'ocean', 'rock', or 'ice'.
+% 
+% zi = itslive_interp(variable,xi,yi) interpolates to the polar stereographic 
+% coordinates xi,yi in meters. 
+% 
+% zi = itslive_interp(...,'path',filepath) specifies a filepath to the mosaic data. 
+% 
+% zi = itslive_interp(...,'region',region) specifies a region. This is not 
+% supported, so for now all you'll get is ANT for Antarctica. 
+% 
+% zi = itslive_interp(...,'method',InterpMethod) specifies an interpolation 
+% method. Interpolation is linear by default, except for variables 'ocean', 
+% 'rock', or 'ice', which are nearest neighbor. 
+% 
+% zi = itslive_interp(...,'year',years) specifies years of velocity mosaics.
+% 
+% va = itslive_interp('across',...)
+% 
+% vc = itslive_interp('along',...) 
+% 
+%% Example 1
+% Get velocity data for a grid of points surrounding Totten, 150 km wide 
+% by 200 km tall at 0.1 km resolution: 
+% 
+% [lat,lon] = psgrid('totten glacier',[150 200],0.1); 
+% v = itslive_interp('v',lat,lon); 
+% 
+% pcolorps(lat,lon,v) % an AMT function for pcolor in polar stereographic. 
+% 
+%% Example 2
+% Same grid as above, but specify a year and a filepath: 
+% 
+% v_err = itslive_interp('v_err',lat,lon,'path','/Users/cgreene/Documents/MATLAB/data','year',2018); 
+%
+% pcolorps(lat,lon,v_err) % an AMT function for pcolor in polar stereographic. 
+% 
+%% Example 3
+% Calculate total flux in/out of a basin: 
+% 
+% % Load a basin outline: 
+% [lati,loni] = basin_data('imbie refined','pine island'); 
+% 
+% % Densify to 100 m spacing: (use only finite values)
+% isf = isfinite(lati); 
+% [lati,loni] = pspath(lati(isf),loni(isf),100); 
+% 
+% % Calculate ice velocity across the basin boundary: 
+% vci = itslive_interp('across',lati,loni);
+% 
+% % Get corresponding ice thickness: 
+% thi = bedmachine_interp('thickness',lati,loni,'antarctica');
+% 
+% % Calculate (crosstrack velocity)*(thickness) at each point: 
+% Ui = vci.*thi; 
+% 
+% Calculate total volume imbalance (requires multiplying by dx which is about 100m in this example) 
+% d = pathdistps(lati,loni); % distance along the path in meters
+% dx = gradient(d); % dx is 100 m in our example, but this general solution is better. 
+% Vol = sum(Ui.*dx,'omitnan'); 
+% 
+% % Convert Volume to mass (multiply by 917 kg/m^3, then 1e-12 to get to Gt) 
+% Mass = Vol*917*1e-12
+%        -128.56
+% 
+% Plot everything: 
+% 
+% figure
+% subsubplot(3,1,1) 
+% anomaly(d/1000,vci) 
+% axis tight
+% ylabel 'velocity across (m/yr)'
+% 
+% subsubplot(3,1,2) 
+% plot(d/1000,thi) 
+% axis tight
+% set(gca,'YAxisLocation','right') 
+% ylabel 'ice thickness (m)' 
+% 
+% subsubplot(3,1,3) 
+% anomaly(d/1000,Ui)
+% axis tight
+% ylabel 'local flow m^2/yr' 
+% xlabel 'distance around basin boundary (km)' 
+% 
+% % Another way of looking at it: 
+% figure
+% scatterps(lati,loni,30,Ui,'filled') 
+% cmocean('-balance','pivot') 
+% modismoaps('contrast','low') 
+% cb = colorbar
+% ylabel(cb,'ice flux m^2/yr')
+% 
+%% Author Info
+% This function was written by Chad A. Greene, April 6, 2019. 
+% 
+% See also itslive_data. 
+
+narginchk(3,Inf) 
+assert(~isnumeric(variable),'Error: First input must be a variable name.') 
+assert(isequal(size(lati_or_xi),size(loni_or_yi)),'Error: Input query points must have matching dimensions.') 
+
+%% Parse Inputs 
+
+% Are inputs georeferenced coordinates or polar stereographic?
+if islatlon(lati_or_xi,loni_or_yi)
+   % Check hemisphere: 
+   if any(lati_or_xi(:)>0)
+      [xi,yi] = ll2psn(lati_or_xi,loni_or_yi); % The ll2psn function is part of Arctic Mapping Tools package, the lesser known sibling of Antarctic Mapping Tools. 
+   else
+      IceSheet = 'antarctica'; % This might be declared explicitly by the user later, but just in case they forget, this will do what they probably want to do. 
+      [xi,yi] = ll2ps(lati_or_xi,loni_or_yi); % The ll2ps function is in the Antarctic Mapping Tools package.
+   end
+else 
+   xi = lati_or_xi;
+   yi = loni_or_yi;    
+end
+
+
+tmp = strncmpi(varargin,'method',4); 
+if any(tmp)
+   InterpMethod = varargin{find(tmp)+1}; 
+else
+   if ismember(lower(variable),{'rock','ice','ocean'})
+      InterpMethod = 'nearest'; 
+   else
+      InterpMethod = 'linear'; 
+   end
+end
+
+
+tmp = strncmpi(varargin,'years',4); 
+if any(tmp)
+   years = varargin{find(tmp)+1}; 
+   annual = true; 
+else 
+   annual = false; 
+end
+
+tmp = strcmpi(varargin,'path'); 
+if any(tmp)
+   filepath = varargin{find(tmp)+1}; 
+else
+   filepath = []; 
+end
+
+if ismember(lower(variable),{'along','across'})
+   CrossTrack = true; 
+else
+   CrossTrack = false; 
+end
+
+%% Load data: 
+
+if CrossTrack
+   
+   if annual
+      [vx,x,y] = itslive_data('vx',xi,yi,'buffer',1,'years',years,'path',filepath); 
+      vy = itslive_data('vy',xi,yi,'buffer',1,'years',years,'path',filepath); 
+   else
+      [vx,x,y] = itslive_data('vx',xi,yi,'buffer',1,'path',filepath); 
+      vy = itslive_data('vy',xi,yi,'buffer',1,'path',filepath);
+   end
+   
+else 
+   if annual
+      [Z,x,y] = itslive_data(variable,xi,yi,'buffer',1,'years',years,'path',filepath); 
+   else
+      [Z,x,y] = itslive_data(variable,xi,yi,'buffer',1,'path',filepath); 
+   end
+end
+
+%% Interpolate: 
+
+if CrossTrack
+   
+   % Preallocate: 
+   vxi = NaN(size(xi,1),size(xi,2),size(vx,3)); 
+   vyi = vxi; 
+
+   % Interpolate: 
+   for k = 1:size(vx,3)
+      vxi(:,:,k) = interp2(x,y,vx(:,:,k),xi,yi,InterpMethod); 
+      vyi(:,:,k) = interp2(x,y,vy(:,:,k),xi,yi,InterpMethod); 
+   end
+   
+else
+   % Preallocate: 
+   zi = NaN(size(xi,1),size(xi,2),size(Z,3)); 
+
+   % Interpolate: 
+   for k = 1:size(Z,3)
+      zi(:,:,k) = interp2(x,y,Z(:,:,k),xi,yi,InterpMethod); 
+   end
+end
+
+%% Convert to along/across track components:
+
+if CrossTrack
+   
+   % Calculate along-track angles
+   alongtrackdist = pathdistps(xi,yi); % cumulative distance along path in meters
+   fx = gradient(xi,alongtrackdist); 
+   fy = gradient(yi,alongtrackdist);
+   theta = atan2(fy,fx);          
+
+   % Convert x and y components to cross-track component: 
+   v_along = vxi.*cos(theta) + vyi.*sin(theta);       
+   v_across = vxi.*sin(theta) - vyi.*cos(theta); 
+
+   switch lower(variable)
+      case 'along'
+         zi = squeeze(v_along); 
+      case 'across'
+         zi = squeeze(v_across);
+      otherwise
+         error(['unrecognized variable ',variable])
+   end
+
+end
+
+
+end
