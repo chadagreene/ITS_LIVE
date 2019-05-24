@@ -3,11 +3,14 @@ function h = itslive_imagesc(variable,varargin)
 % 
 %% Syntax
 % 
+%  itslive_imagesc
 %  itslive_imagesc(variable) 
 %  itslive_imagesc(variable,'alpha',alpha) 
 %  h = itslive_imagesc(...)
 % 
 %% Description 
+% 
+% itslive_imagesc plots ITS_LIVE ice speed as an imagesc object. 
 % 
 % itslive_imagesc(variable) plots any ITS_LIVE variable such as 'v', 'vx','vy', 
 % 'vx_err', 'vy_err', 'v_err', 'date', 'dt', 'count', 'chip_size_max', 
@@ -36,7 +39,11 @@ function h = itslive_imagesc(variable,varargin)
 
 %% Parse inputs: 
 
-narginchk(1,3)
+narginchk(0,3)
+
+if nargin==0
+   variable = 'v'; 
+end
 
 tmp = strcmpi(varargin,'alpha'); 
 if any(tmp)
