@@ -20,7 +20,7 @@ function h = itslive_quiver(varargin)
 % properties. 
 % 
 % itslive_quiver(...,'density','DensityFactor') specifies the density of 
-% the arrows. Default DensityFactor is 50, meaning hypot(Nrows,Ncols)=50, 
+% the arrows. Default DensityFactor is 75, meaning hypot(Nrows,Ncols)=75, 
 % but if your plot is too crowded you may specify a lower DensityFactor 
 % (and/or adjust the markersize). 
 % 
@@ -108,7 +108,7 @@ function h = quiversc(x,y,u,v,varargin)
 % quiversc(...,'density',DensityFactor) specifies density of quiver arrows. The 
 % DensityFactor defines how many arrows are plotted. Default DensityFactor is 
 % 50, meaning hypot(Nrows,Ncols)=50, but if your plot is too crowded you may 
-% specify a lower DensityFactor (and/or adjust the markersize). 
+% specify a lower DensityFactor (and/or adjust the markersize). % CHANGED THIS TO 75 FOR ITSLIVE_QUIVER.
 % 
 % quiversc(...,scale) automatically scales the length of the arrows to fit within 
 % the grid and then stretches them by the factor scale. scale = 2 doubles their 
@@ -156,7 +156,7 @@ if any(tmp)
    varargin = varargin(~tmp); 
    assert(isscalar(density)==1,'Input error: Density value must be a scalar. Default density is 100.') 
 else 
-   density = 50; 
+   density = 75; % CHANGED THIS TO 75 FOR ITSLIVE_QUIVER.
 end
 
 %% Resize the grids: 
