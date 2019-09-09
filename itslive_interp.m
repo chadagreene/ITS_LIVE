@@ -35,7 +35,15 @@ function zi = itslive_interp(variable,lati_or_xi,loni_or_yi,varargin)
 % 
 % vc = itslive_interp('along',...) 
 % 
-%% Example 1
+%% Example 1 
+% Byrd glacier grounding line:
+% 
+% year = 2000:2018; 
+% v = itslive_interp('v',-80.38,158.75,'years',year); 
+% v_err = itslive_interp('v_err',-80.38,158.75,'years',year); 
+% errorbar(year,v,v_err) 
+% 
+%% Example 2
 % Get velocity data for a grid of points surrounding Totten, 150 km wide 
 % by 200 km tall at 0.1 km resolution: 
 % 
@@ -44,14 +52,14 @@ function zi = itslive_interp(variable,lati_or_xi,loni_or_yi,varargin)
 % 
 % pcolorps(lat,lon,v) % an AMT function for pcolor in polar stereographic. 
 % 
-%% Example 2
+%% Example 3
 % Same grid as above, but specify a year and a filepath: 
 % 
 % v_err = itslive_interp('v_err',lat,lon,'path','/Users/cgreene/Documents/MATLAB/data','year',2018); 
 %
 % pcolorps(lat,lon,v_err) % an AMT function for pcolor in polar stereographic. 
 % 
-%% Example 3
+%% Example 4
 % Calculate total flux in/out of a basin: 
 % 
 % % Load a basin outline: 
@@ -210,6 +218,7 @@ else
    end
 end
 
+
 %% Convert to along/across track components:
 
 if CrossTrack
@@ -235,5 +244,10 @@ if CrossTrack
 
 end
 
+%% 
+
+if isequal([size(zi,1) size(zi,1)],[1 1])
+   zi = squeeze(zi); 
+end
 
 end
