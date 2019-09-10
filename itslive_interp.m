@@ -31,9 +31,12 @@ function zi = itslive_interp(variable,lati_or_xi,loni_or_yi,varargin)
 % 
 % zi = itslive_interp(...,'year',years) specifies years of velocity mosaics.
 % 
-% va = itslive_interp('across',...)
+% v_across = itslive_interp('across',lati_or_xi,loni_or_yi,...) calculates the 
+% across-track velocity for a path such as a grounding line lati,loni or xi,yi. 
+% This is designed for calculating the flow across a flux gate. 
 % 
-% vc = itslive_interp('along',...) 
+% v_along = itslive_interp('along',lati_or_xi,loni_or_yi,...) the complement 
+% to the across track component.  
 % 
 %% Example 1 
 % Byrd glacier grounding line:
