@@ -1,6 +1,19 @@
 # ITS_LIVE functions for MATLAB 
 These MATLAB functions are intended to make it easy and efficient to work with [ITS_LIVE](https://its-live.jpl.nasa.gov/) velocity data. Right now these functions only support the Antarctic region, but if you'd like them for other regions let me know and maybe I can whip something up for you. 
 
+## Function List 
+**`itslive_data`** loads ITS_LIVE velocity mosaic data.
+
+**`itslive_interp`** interpolates ITS_LIVE velocity mosaic data to specified locations. 
+
+**`itslive_tilefun`** loads multiple years of ITS_LIVE velocity mosaic data in tiles and applies a specified function through time. Tiling is necessary when memory issues arise when trying to load and process multiple years of ITS_LIVE data all at once. (Requires the Climate Data Toolbox for Matlab.)
+
+**`itslive_imagesc`** plots itslive velocity magnitude (speed) data as an imagesc plot. If an AMT polar stereographic map is already open, itslive_imagesc will only load and plot enough data to fill the current map. 
+
+**`itslive_quiver`** as above, but plots ITS_LIVE velocity data as quiver arrows. 
+
+**`itslive_tsplot`** plots a single grid cell of IT_LIVE velocity observations as a timeseries plot. 
+
 ## Requirements 
 Since these functions are currently just for the Antarctic, they rely on [Antarctic Mapping Tools for Matlab](http://www.mathworks.com/matlabcentral/fileexchange/47638), so you'll need to get that package if you don't already have it. 
 

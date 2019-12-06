@@ -174,6 +174,12 @@ end
 
 %% Load data 
 
+% If user only wants vectors, give 'em to 'em and exit the function: 
+if ismember(lower(variable),{'x','y'})
+   Z = ncread(fullfile(filepath,filename),variable); 
+   return
+end
+
 x = ncread(fullfile(filepath,filename),'x'); 
 y = ncread(fullfile(filepath,filename),'y'); 
 
@@ -212,8 +218,12 @@ else
    Z = flipud(rot90(ncread(fullfile(filepath,filename),variable,[ri(1) ci(1)],[length(ri) length(ci)])));
 end 
 
-% Take care of NaNs: 
-Z(Z==-32767) = NaN; 
+if ismember(lower(variable),{'rock','ocean','ice'})
+   Z = logical(Z); 
+else
+   % Take care of NaNs: 
+   Z(Z==-32767) = NaN; 
+end
 
 %% Final adjustments for the export: 
 
