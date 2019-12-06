@@ -34,9 +34,9 @@ function [vf,x,y] = itslive_tilefun(variable,years,fun,varargin)
 % 
 %% Example 2
 % Get the mean velocity for 2016 to 2018, omitting NaN values, and specifying
-% a maximum tilesize of 800x800: 
+% a maximum tilesize of 2500x2500: 
 % 
-% vm = itslive_tilefun('v',2016:2018,@mean,'tilesize',800);  
+% vm = itslive_tilefun('v',2016:2018,@mean,'omitnan','tilesize',2500);  
 % 
 %% Author Info 
 % Written by Chad A. Greene, December 2019. 
