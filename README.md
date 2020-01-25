@@ -1,5 +1,7 @@
 [![View ITS_LIVE Antarctic ice velocity data on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/72701-its_live-antarctic-ice-velocity-data)
 
+![ITS_LIVE](itslive_velmap.jpg)
+
 # ITS_LIVE functions for MATLAB 
 These MATLAB functions are intended to make it easy and efficient to work with [ITS_LIVE](https://its-live.jpl.nasa.gov/) velocity data. Right now these functions only support the Antarctic region, but if you'd like them for other regions let me know and maybe I can whip something up for you. 
 
@@ -13,6 +15,10 @@ These MATLAB functions are intended to make it easy and efficient to work with [
 **`itslive_imagesc`** plots itslive velocity magnitude (speed) data as an imagesc plot. If an AMT polar stereographic map is already open, itslive_imagesc will only load and plot enough data to fill the current map. 
 
 **`itslive_quiver`** as above, but plots ITS_LIVE velocity data as quiver arrows. 
+
+**`itslive_contour`** is equivalent to `itslive_imagesc`, but plots contours instead of scaled color. 
+
+**`itslive_flowline`** calculates flowlines from itslive velocity mosaics. 
 
 **`itslive_tsplot`** plots a single grid cell of IT_LIVE velocity observations as a timeseries plot. 
 

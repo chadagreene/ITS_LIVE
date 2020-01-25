@@ -56,6 +56,22 @@ function [hdot,hspan,herr] = itslive_tsplot(t,v,err,varargin)
 % itslive_tsplot(t,vx,vx_err,'linecolor',rgb('light red'),...
 %  'markercolor',rgb('dark red'),'datenum')
 % 
+%% Citing this data
+% If this function is helpful for you, please cite
+% 
+% Gardner, A. S., M. A. Fahnestock, and T. A. Scambos, 2019 [update to time 
+% of data download]: ITS_LIVE Regional Glacier and Ice Sheet Surface Velocities.
+% Data archived at National Snow and Ice Data Center; doi:10.5067/6II6VW8LLWJ7.
+%
+% Gardner, A. S., G. Moholdt, T. Scambos, M. Fahnstock, S. Ligtenberg, M. van
+% den Broeke, and J. Nilsson, 2018: Increased West Antarctic and unchanged 
+% East Antarctic ice discharge over the last 7 years, _Cryosphere,_ 12(2): 
+% 21?547, doi:10.5194/tc-12-521-2018.
+%
+% Greene, C. A., Gwyther, D. E., & Blankenship, D. D. Antarctic Mapping Tools  
+% for Matlab. Computers & Geosciences. 104 (2017) pp.151-157. 
+% http://dx.doi.org/10.1016/j.cageo.2016.08.003
+%
 %% Author Info
 % This function was written by Chad A. Greene, May 2019. 
 % 
@@ -130,7 +146,7 @@ if discardoutliers
    v_resid = v-v_int; 
    
    % Find and destroy outliers: 
-   outliers = abs(v_resid)>2*std(v_resid); 
+   outliers = abs(v_resid)>2.5*std(v_resid); 
    t = t(~outliers,:); 
    v = v(~outliers); 
    err = err(~outliers); 
