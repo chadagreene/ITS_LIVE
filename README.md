@@ -20,6 +20,8 @@ These MATLAB functions are intended to make it easy and efficient to work with [
 
 **`itslive_flowline`** calculates flowlines from itslive velocity mosaics. 
 
+**`itslive_displacement`** similar to `itslive_flowline`, but calculates the position of point(s) after a specified time interval. For example, where was a certain grid point 3.5 year ago? Enter its coordinates with a dt value of -3.5 to find out. 
+
 **`itslive_tsplot`** plots a single grid cell of IT_LIVE velocity observations as a timeseries plot. 
 
 ## Requirements 
