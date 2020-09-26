@@ -10,8 +10,8 @@ function [Z,Lat_or_x,Lon_or_y] = itslive_data(variable,varargin)
 %  Z = itslive_data(...,'year',years) 
 %  Z = itslive_data(...,'path',filepath) 
 %  Z = itslive_data(...,'region',region) 
-%  [Z,Lat,Lon] = itslive_data(...)
-%  [Z,x,y] = itslive_data(...,'xy') 
+%  [Z,x,y] = itslive_data(...) 
+%  [Z,Lat,Lon] = itslive_data(...,'geo')
 % 
 %% Description 
 % 
