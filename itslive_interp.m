@@ -228,12 +228,24 @@ if CrossTrack
    end
    
 else
-   % Preallocate: 
-   zi = NaN(size(xi,1),size(xi,2),size(Z,3)); 
+   
+   if islogical(Z)
+      
+      % Preallocate:
+      zi = false(size(xi,1),size(xi,2),size(Z,3)); 
 
-   % Interpolate: 
-   for k = 1:size(Z,3)
-      zi(:,:,k) = interp2(x,y,Z(:,:,k),xi,yi,InterpMethod); 
+      for k=1:size(Z,3)
+         zi(:,:,k) = interp2(x,y,Z(:,:,k),xi,yi,'nearest',0); 
+      end
+   else
+      
+      % Preallocate:
+      zi = NaN(size(xi,1),size(xi,2),size(Z,3)); 
+
+      % Interpolate: 
+      for k = 1:size(Z,3)
+         zi(:,:,k) = interp2(x,y,Z(:,:,k),xi,yi,InterpMethod); 
+      end
    end
 end
 
