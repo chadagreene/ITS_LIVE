@@ -22,8 +22,10 @@ function zi = itslive_interp(variable,lati_or_xi,loni_or_yi,varargin)
 % 
 % zi = itslive_interp(...,'path',filepath) specifies a filepath to the mosaic data. 
 % 
-% zi = itslive_interp(...,'region',region) specifies a region. This is not 
-% supported, so for now all you'll get is ANT for Antarctica. 
+% zi = itslive_interp(...,'region',region) specifies a region as ALA, ANT, 
+% CAN, GRE, HMA, ICE, PAT, or SRA. So far I know the ANT option works, but 
+% all other regions are currently in beta, so let me know if you experience 
+% any problems. ANT is the default region. 
 % 
 % zi = itslive_interp(...,'method',InterpMethod) specifies an interpolation 
 % method. Interpolation is linear by default, except for variables 'ocean', 
@@ -145,20 +147,47 @@ assert(isequal(size(lati_or_xi),size(loni_or_yi)),'Error: Input query points mus
 
 %% Parse Inputs 
 
-% Are inputs georeferenced coordinates or polar stereographic?
+tmp = strncmpi(varargin,'region',3); 
+if any(tmp)
+   region = varargin{find(tmp)+1}; 
+else 
+   region = 'ANT'; 
+end
+
+tmp = strncmpi(varargin,'years',4); 
+if any(tmp)
+   years = varargin{find(tmp)+1}; 
+   annual = true; 
+else 
+   annual = false; 
+end
+
+% Are inputs georeferenced coordinates or projected meters?
 if islatlon(lati_or_xi,loni_or_yi)
-   % Check hemisphere: 
-   if any(lati_or_xi(:)>0)
-      [xi,yi] = ll2psn(lati_or_xi,loni_or_yi); % The ll2psn function is part of Arctic Mapping Tools package, the lesser known sibling of Antarctic Mapping Tools. 
-   else
-      IceSheet = 'antarctica'; % This might be declared explicitly by the user later, but just in case they forget, this will do what they probably want to do. 
-      [xi,yi] = ll2ps(lati_or_xi,loni_or_yi); % The ll2ps function is in the Antarctic Mapping Tools package.
+   switch lower(region) 
+      case {'ala','can','gre','ice','sra'}
+         assert(exist('projcrs.m','file')==2,'Sorry, the ALA,CAN,GRE,ICE, and SRA projections require Matlab 2020b or later AND the Mapping Toolbox. However, this can easily be rewritten to rely on Arctic Mapping Tools ll2psn function instead.') 
+         proj = projcrs(3413,'authority','EPSG'); 
+         [xi,yi] = projfwd(proj,lati_or_xi,loni_or_yi); 
+      case 'ant'
+         assert(exist('ll2ps.m','file')==2,'Cannot find ll2ps, which is an essential function in Antarctic Mapping Tools.')
+         [xi,yi] = ll2ps(lati_or_xi,loni_or_yi); % The ll2ps function is in the Antarctic Mapping Tools package.
+      case 'hma'
+         assert(exist('projcrs.m','file')==2,'Sorry, the HMA projection requires Matlab 2020b or later AND the Mapping Toolbox. I, too, wish things could be different.') 
+         proj = projcrs(102027,'authority','ESRI'); 
+         [xi,yi] = projfwd(proj,lati_or_xi,loni_or_yi); 
+      case 'pat'
+         assert(exist('projcrs.m','file')==2,'Sorry, the PAT projection requires Matlab 2020b or later AND the Mapping Toolbox. I, too, wish things could be different.') 
+         proj = projcrs(32718,'authority','EPSG'); 
+         [xi,yi] = projfwd(proj,lati_or_xi,loni_or_yi); 
+      otherwise
+         error('Unsupported region. So far only ANT and HMA are supported, but email me and I will be happy to add support for other regions.')
    end
+
 else 
    xi = lati_or_xi;
    yi = loni_or_yi;    
 end
-
 
 tmp = strncmpi(varargin,'method',4); 
 if any(tmp)
@@ -170,7 +199,6 @@ else
       InterpMethod = 'linear'; 
    end
 end
-
 
 tmp = strncmpi(varargin,'years',4); 
 if any(tmp)
@@ -189,6 +217,7 @@ end
 
 if ismember(lower(variable),{'along','across'})
    CrossTrack = true; 
+   assert(strcmpi(region,'ANT'),'Along or across track velocities are only supported for Antarctica.')
 else
    CrossTrack = false; 
 end
@@ -198,18 +227,18 @@ end
 if CrossTrack
    
    if annual
-      [vx,x,y] = itslive_data('vx',xi,yi,'buffer',1,'years',years,'path',filepath); 
-      vy = itslive_data('vy',xi,yi,'buffer',1,'years',years,'path',filepath); 
+      [vx,x,y] = itslive_data('vx',xi,yi,'buffer',1,'years',years,'path',filepath,'region',region); 
+      vy = itslive_data('vy',xi,yi,'buffer',1,'years',years,'path',filepath,'region',region); 
    else
-      [vx,x,y] = itslive_data('vx',xi,yi,'buffer',1,'path',filepath); 
-      vy = itslive_data('vy',xi,yi,'buffer',1,'path',filepath);
+      [vx,x,y] = itslive_data('vx',xi,yi,'buffer',1,'path',filepath,'region',region); 
+      vy = itslive_data('vy',xi,yi,'buffer',1,'path',filepath,'region',region);
    end
    
 else 
    if annual
-      [Z,x,y] = itslive_data(variable,xi,yi,'buffer',1,'years',years,'path',filepath); 
+      [Z,x,y] = itslive_data(variable,xi,yi,'buffer',1,'years',years,'path',filepath,'region',region); 
    else
-      [Z,x,y] = itslive_data(variable,xi,yi,'buffer',1,'path',filepath); 
+      [Z,x,y] = itslive_data(variable,xi,yi,'buffer',1,'path',filepath,'region',region); 
    end
 end
 
