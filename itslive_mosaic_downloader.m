@@ -6,7 +6,8 @@
 
 %% Set preferences: 
 
-region = 'HMA'; % Can be GRE, ANT, HMA, PAT, ICE, SRA, CAN, or ALA.
+region = 'GRE'; % Can be GRE, ANT, HMA, PAT, ICE, SRA, CAN, or ALA.
+overwrite = false; % If true, this will download and overwrite files by the same name. If false, any existing files are not downloaded.
 
 yr = [0000 2018:-1:1985]; % Download the overall mosaic first, then each year starting with most recent. 
 
@@ -22,18 +23,24 @@ for k = 1:length(yr)
    
    % Define filename: 
    if k==1
-      fn = [region,'_G0240_0000.nc'];
+      fn = [upper(region),'_G0240_0000.nc'];
       url = ['http://its-live-data.jpl.nasa.gov.s3.amazonaws.com/velocity_mosaic/landsat/v00.0/static/',fn];      
+      waitbar((k-1)/length(yr),w,'Downloading data from the overall mosaic.')
    else
-      fn = [region,'_G0240_',num2str(yr(k)),'.nc'];
+      fn = [upper(region),'_G0240_',num2str(yr(k)),'.nc'];
       url = ['http://its-live-data.jpl.nasa.gov.s3.amazonaws.com/velocity_mosaic/landsat/v00.0/annual/',fn];
+      waitbar((k-1)/length(yr),w,{['Downloading data from the ',num2str(yr(k)),' mosaic.'];'Going backward through time...'})
    end
    
-   waitbar((k-1)/length(yr),w,{['Downloading data from the ',num2str(yr(k)),' mosaic.'];'Going backward through time...'})
-   websave(fn,url);
-   if k==10
-      break
+   if exist(fn,'file')==2
+      if ~overwrite
+         disp(['Skipping ',fn,' because it already exists.'])
+         continue % skips this mosaic if the user says don't overwrite existing files. 
+      end
    end
+   
+   websave(fn,url);
+   
 end
 
 waitbar(1,w,'Done') 
