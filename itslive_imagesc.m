@@ -6,6 +6,7 @@ function h = itslive_imagesc(variable,varargin)
 %  itslive_imagesc
 %  itslive_imagesc(variable) 
 %  itslive_imagesc(variable,'alpha',alpha) 
+%  itslive_imagesc(...,'region',region)
 %  h = itslive_imagesc(...)
 % 
 %% Description 
@@ -21,16 +22,35 @@ function h = itslive_imagesc(variable,varargin)
 % might take a few seconds...
 % 
 % itslive_imagesc(variable,'alpha',alpha) sets the transparency to a value 
-% of 0 (totally transparent) to 1 (totally opaque). Default value is 1. 
+% between 0 (totally transparent) and 1 (totally opaque). Default value is 1, 
+% (except for NaNs, which are always set to 0).
+% 
+% itslive_imagesc(...,'region',region) specifies a region as 'ALA', 'ANT', 
+% 'CAN', 'GRE', 'HMA', 'ICE', 'PAT', or 'SRA'. Default region is 'ANT'. 
 % 
 % h = itslive_imagesc(...) returns a handle h of the image object. 
 % 
-%% Examples: 
+%% Example 1
+% Zoom in to a small region of interest (do this before calling itslive_imagesc
+% so it will only load the necessary data), plot a background MODIS Mosaic
+% of Antarctica image, and then overlay a semitransparent ice speed layer, 
+% and finish it off with quiver arrows. 
 %
 % mapzoomps('pine island glacier') 
 % modismoaps('contrast','low')
 % itslive_imagesc('v','alpha',0.8) 
 % itslive_quiver
+% 
+%% Example 2
+% Show all the velocity data in High Mountain Asia. 
+% 
+% figure
+% itslive_imagesc('v','region','hma'); 
+% caxis([0 100]) 
+% 
+% % zoom in and add velocity arrows: 
+% axis([-1648836.00   -1621098.00     840867.00     860680.00])
+% itslive_quiver('region','hma','density',100) 
 % 
 %% Citing this data
 % If this function is helpful for you, please cite
@@ -69,6 +89,13 @@ else
    alpha = 1; 
 end
 
+tmp = strncmpi(varargin,'region',3); 
+if any(tmp)
+   region = varargin{find(tmp)+1}; 
+else
+   region = 'ANT'; 
+end
+
 %% Check the presence of a current axes: 
 
 ax = axis; 
@@ -81,9 +108,9 @@ end
 %% Load data: 
 
 if NewMap
-   [Z,x,y] = itslive_data(variable,'xy'); 
+   [Z,x,y] = itslive_data(variable,'xy','region',region); 
 else
-   [Z,x,y] = itslive_data(variable,ax(1:2),ax(3:4),'xy'); 
+   [Z,x,y] = itslive_data(variable,ax(1:2),ax(3:4),'xy','region',region); 
 end 
 
 %% Plot things: 

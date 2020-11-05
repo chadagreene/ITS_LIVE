@@ -6,7 +6,7 @@
 
 %% Set preferences: 
 
-region = 'GRE'; % Can be GRE, ANT, HMA, PAT, ICE, SRA, CAN, or ALA.
+region = 'ALA'; % Can be GRE, ANT, HMA, PAT, ICE, SRA, CAN, or ALA.
 overwrite = false; % If true, this will download and overwrite files by the same name. If false, any existing files are not downloaded.
 
 yr = [0000 2018:-1:1985]; % Download the overall mosaic first, then each year starting with most recent. 

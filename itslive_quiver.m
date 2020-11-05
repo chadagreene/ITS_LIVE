@@ -7,6 +7,7 @@ function h = itslive_quiver(varargin)
 %  itslive_quiver('colorspec')
 %  itslive_quiver(...Name,Value) 
 %  itslive_quiver(...,'density','DensityFactor') 
+%  itslive_quiver(...,'region',region) 
 %  h = itslive_quiver(...) 
 % 
 %% Description 
@@ -23,6 +24,9 @@ function h = itslive_quiver(varargin)
 % the arrows. Default DensityFactor is 75, meaning hypot(Nrows,Ncols)=75, 
 % but if your plot is too crowded you may specify a lower DensityFactor 
 % (and/or adjust the markersize). 
+% 
+% itslive_imagesc(...,'region',region) specifies a region as 'ALA', 'ANT', 
+% 'CAN', 'GRE', 'HMA', 'ICE', 'PAT', or 'SRA'. Default region is 'ANT'. 
 % 
 % h = itslive_quiver(...) returns a handle h of the plotted quiver object.
 % 
@@ -56,7 +60,6 @@ function h = itslive_quiver(varargin)
 %
 % See also: itslive_imagesc and itslive_data. 
 
-
 %% Check the presence of a current axes: 
 
 ax = axis; 
@@ -64,6 +67,15 @@ if isequal(ax,[0 1 0 1])
    NewMap = true; 
 else 
    NewMap = false; 
+end
+
+tmp = strncmpi(varargin,'region',3); 
+if any(tmp) 
+   region = varargin{find(tmp)+1}; 
+   tmp(find(tmp)+1)=1; 
+   varargin = varargin(~tmp); 
+else
+   region = 'ANT'; % antarctica by default
 end
 
 %% Load data: 
@@ -76,11 +88,11 @@ if NewMap
       return
    end
 
-   [vx,x,y] = itslive_data('vx','xy'); 
-   vy = itslive_data('vy','xy'); 
+   [vx,x,y] = itslive_data('vx','xy','region',region); 
+   vy = itslive_data('vy','xy','region',region); 
 else
-   [vx,x,y] = itslive_data('vx',ax(1:2),ax(3:4),'buffer',10,'xy'); % A little bit of buffer to make the resizing nice. 
-   vy = itslive_data('vy',ax(1:2),ax(3:4),'buffer',10,'xy'); 
+   [vx,x,y] = itslive_data('vx',ax(1:2),ax(3:4),'buffer',10,'xy','region',region); % A little bit of buffer to make the resizing nice. 
+   vy = itslive_data('vy',ax(1:2),ax(3:4),'buffer',10,'xy','region',region); 
 end 
 
 %% Plot things: 

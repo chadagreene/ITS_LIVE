@@ -22,10 +22,8 @@ function zi = itslive_interp(variable,lati_or_xi,loni_or_yi,varargin)
 % 
 % zi = itslive_interp(...,'path',filepath) specifies a filepath to the mosaic data. 
 % 
-% zi = itslive_interp(...,'region',region) specifies a region as ALA, ANT, 
-% CAN, GRE, HMA, ICE, PAT, or SRA. So far I know the ANT option works, but 
-% all other regions are currently in beta, so let me know if you experience 
-% any problems. ANT is the default region. 
+% zi = itslive_interp(...,'region',region) specifies a region as 'ALA', 'ANT', 
+% 'CAN', 'GRE', 'HMA', 'ICE', 'PAT', or 'SRA'. Default region is 'ANT'. 
 % 
 % zi = itslive_interp(...,'method',InterpMethod) specifies an interpolation 
 % method. Interpolation is linear by default, except for variables 'ocean', 
@@ -120,6 +118,18 @@ function zi = itslive_interp(variable,lati_or_xi,loni_or_yi,varargin)
 % cb = colorbar
 % ylabel(cb,'ice flux m^2/yr')
 % 
+%% Example 5: Greenland 
+% Make a time series of an arbitrary point on Petermann Glacier, and 
+% we'll use (80.44 N, 59.19 W). 
+% 
+% yrs = 1985:2018; 
+% vi = itslive_interp('v',80.44,-59.19,'years',yrs,'region','gre'); 
+% vi_err = itslive_interp('v_err',80.44,-59.19,'years',yrs,'region','gre'); 
+% 
+% figure
+% boundedline(yrs,vi,vi_err,'nan','gap') % (can use errorbar instead but it's ugly) 
+% ylabel('velocity of a point (m/yr)') 
+% 
 %% Citing this data
 % If this function is helpful for you, please cite
 % 
@@ -166,9 +176,13 @@ end
 if islatlon(lati_or_xi,loni_or_yi)
    switch lower(region) 
       case {'ala','can','gre','ice','sra'}
-         assert(exist('projcrs.m','file')==2,'Sorry, the ALA,CAN,GRE,ICE, and SRA projections require Matlab 2020b or later AND the Mapping Toolbox. However, this can easily be rewritten to rely on Arctic Mapping Tools ll2psn function instead.') 
-         proj = projcrs(3413,'authority','EPSG'); 
-         [xi,yi] = projfwd(proj,lati_or_xi,loni_or_yi); 
+         if exist('ll2psn.m','file')==2
+            [xi,yi] = ll2psn(lati_or_xi,loni_or_yi); 
+         else
+            assert(exist('projcrs.m','file')==2,'The ALA,CAN,GRE,ICE, and SRA projections require either: (Arctic Mapping Tools, which is free on File Exchange) OR (Matlab 2020b or later AND Matlab''s Mapping Toolbox).') 
+            proj = projcrs(3413,'authority','EPSG'); 
+            [xi,yi] = projfwd(proj,lati_or_xi,loni_or_yi); 
+         end
       case 'ant'
          assert(exist('ll2ps.m','file')==2,'Cannot find ll2ps, which is an essential function in Antarctic Mapping Tools.')
          [xi,yi] = ll2ps(lati_or_xi,loni_or_yi); % The ll2ps function is in the Antarctic Mapping Tools package.
@@ -188,6 +202,7 @@ else
    xi = lati_or_xi;
    yi = loni_or_yi;    
 end
+
 
 tmp = strncmpi(varargin,'method',4); 
 if any(tmp)
