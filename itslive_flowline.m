@@ -7,6 +7,7 @@ function [lat_or_x,lon_or_y,d,v,t,h] = itslive_flowline(lati_or_xi,loni_or_yi,va
 %  [x,y] = itslive_flowline(xi,yi)
 %  [lat_or_x,lon_or_y,d,v,t,h] = itslive_flowline(...)
 %  [...] = itslive_flowline(...,'gl') 
+%  [...] = itslive_flowline(...,'region',region)
 %  [...,h] = itslive_flowline(...,'plot',LineProperty,LineValue,...) 
 %  
 %% Description 
@@ -23,6 +24,9 @@ function [lat_or_x,lon_or_y,d,v,t,h] = itslive_flowline(lati_or_xi,loni_or_yi,va
 % location(s).
 % 
 % [...] = itslive_flowline(...,'gl') 
+%
+% [...] = itslive_flowline(...,'region',region) specifies a region as 'ALA', 'ANT', 
+% 'CAN', 'GRE', 'HMA', 'ICE', 'PAT', or 'SRA'. Default region is 'ANT'. 
 % 
 % [...,h] = itslive_flowline(...,'plot',LineProperty,LineValue,...) 
 % 
@@ -79,10 +83,19 @@ if any(tmp)
    varargin = varargin(~tmp); 
 end
 
+tmp = strncmpi(varargin,'region',3); 
+if any(tmp) 
+   region = varargin{find(tmp)+1}; 
+   tmp(find(tmp)+1)=1; 
+   varargin = varargin(~tmp); 
+else
+   region = 'ANT'; % antarctica by default
+end
+
 %% Load data
 
-[vx,x,y] = itslive_data('vx',xi,yi,'buffer',1000); 
-vy = itslive_data('vy',xi,yi,'buffer',1000); 
+[vx,x,y] = itslive_data('vx',xi,yi,'buffer',1000,'region',region); 
+vy = itslive_data('vy',xi,yi,'buffer',1000,'region',region); 
 
 %% Compute streamlines: 
 
