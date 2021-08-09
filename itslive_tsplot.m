@@ -134,7 +134,6 @@ v = v(:);
 err = err(:); 
 
 if discardoutliers
-   
    % Use only finite data: 
    isf = isfinite(v) & isfinite(err); 
    t = t(isf,:); 
