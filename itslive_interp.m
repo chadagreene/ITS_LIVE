@@ -1,134 +1,76 @@
-function zi = itslive_interp(variable,lati_or_xi,loni_or_yi,varargin)
-% interpolates ITS_LIVE velocity data to specified points. 
+function zi = itslive_interp(region,variable,lati_or_xi,loni_or_yi,options)
+% itslive_interp interpolates ITS_LIVE velocity data to specified points. 
 % 
 %% Syntax
 % 
-%  zi = itslive_interp(variable,lati,loni)
-%  zi = itslive_interp(variable,xi,yi)
-%  zi = itslive_interp(...,'path',filepath) 
-%  zi = itslive_interp(...,'region',region)
-%  zi = itslive_interp(...,'method',InterpMethod) 
-%  zi = itslive_interp(...,'year',years) 
+%  zi = itslive_interp(region,variable,xi,yi)
+%  zi = itslive_interp(region,variable,lati,loni)
+%  zi = itslive_interp(..., method=InterpMethod)
+%  zi = itslive_interp(..., year=years)
+%  v_along = = itslive_interp(region,'along',...)
+%  v_across = = itslive_interp(region,'across',...)
 % 
 %% Description 
 % 
-% zi = itslive_interp(variable,lati,loni) interpolates the specified ITS_LIVE
-% variable to the geo coordinate(s) lati,loni. The variable can be 'v', 'vx',
-% 'vy', 'vx_err', 'vy_err', 'v_err', 'date', 'dt', 'count', 'chip_size_max', 
-% 'ocean', 'rock', or 'ice'.
+% zi = itslive_interp(region,variable,xi,yi) interpolates ITS_LIVE mosaic
+% data for the specified region and variable, at the projected map
+% coordinates xi, yi. The region is a number from 1 to 19 (type
+% itslive_regions for a map). The variable can be 'v', 'vx', 'v_error', or
+% any gridded variable in the ITS_LIVE v2 mosaics. Coordinates xi,yi
+% correspond to the map units (m) in the projection of the specified
+% region. 
 % 
-% zi = itslive_interp(variable,xi,yi) interpolates to the polar stereographic 
-% coordinates xi,yi in meters. 
+% zi = itslive_interp(region,variable,lati,loni) as above, but using
+% geographic coordinates. 
 % 
-% zi = itslive_interp(...,'path',filepath) specifies a filepath to the mosaic data. 
+% zi = itslive_interp(..., method=InterpMethod) specifies an interpolation 
+% method. Interpolation is linear by default, except for variables 'landice', 
+% and 'floatingice', which are nearest neighbor. 
 % 
-% zi = itslive_interp(...,'region',region) specifies a region as 'ALA', 'ANT', 
-% 'CAN', 'GRE', 'HMA', 'ICE', 'PAT', or 'SRA'. Default region is 'ANT'. 
+% zi = itslive_interp(...,'year',years) specifies years of velocity
+% mosaics. Default is 0000, which corresponds to summary mosaics. 
 % 
-% zi = itslive_interp(...,'method',InterpMethod) specifies an interpolation 
-% method. Interpolation is linear by default, except for variables 'ocean', 
-% 'rock', or 'ice', which are nearest neighbor. 
-% 
-% zi = itslive_interp(...,'year',years) specifies years of velocity mosaics.
-% 
-% v_across = itslive_interp('across',lati_or_xi,loni_or_yi,...) calculates the 
+% v_across = itslive_interp(region, 'across',...) calculates the 
 % across-track velocity for a path such as a grounding line lati,loni or xi,yi. 
 % This is designed for calculating the flow across a flux gate. 
 % 
-% v_along = itslive_interp('along',lati_or_xi,loni_or_yi,...) the complement 
+% v_along = itslive_interp(region, 'along',...) the complement 
 % to the across track component.  
 % 
 %% Example 1 
 % Byrd glacier grounding line:
 % 
-% year = 2000:2018; 
-% v = itslive_interp('v',-80.38,158.75,'years',year); 
-% v_err = itslive_interp('v_err',-80.38,158.75,'years',year); 
-% errorbar(year,v,v_err) 
+% year = 2014:2022; 
+% v = itslive_interp(19, 'v',-80.38,158.75,'year',year); 
+% v_error = itslive_interp(19, 'v_error',-80.38,158.75,'year',year); 
+% 
+% figure
+% errorbar(year,v,v_error) 
+% xlim([2013 2023])
+% ylabel('Annual velocity (m yr^{-1})')
+% title 'Byrd Glacier, Antarctica'
 % 
 %% Example 2
-% Get velocity data for a grid of points surrounding Totten, 150 km wide 
-% by 200 km tall at 0.1 km resolution: 
+% Multiple locations along Malaspina Gl, Alaska, and multiple years. 
 % 
-% [lat,lon] = psgrid('totten glacier',[150 200],0.1); 
-% v = itslive_interp('v',lat,lon); 
-% 
-% pcolorps(lat,lon,v) % an AMT function for pcolor in polar stereographic. 
-% 
-%% Example 3
-% Same grid as above, but specify a year and a filepath: 
-% 
-% v_err = itslive_interp('v_err',lat,lon,'path','/Users/cgreene/Documents/MATLAB/data','year',2018); 
+% % Define locations and years of interest: 
+% lat = [60.08343 60.02582 59.92546 59.83722]; 
+% lon = [-140.46707 -140.57831 -140.72388 -140.80765]; 
+% years = 2014:2022; 
 %
-% pcolorps(lat,lon,v_err) % an AMT function for pcolor in polar stereographic. 
-% 
-%% Example 4
-% Calculate total flux in/out of a basin: 
-% 
-% % Load a basin outline: 
-% [lati,loni] = basin_data('imbie refined','pine island'); 
-% 
-% % Densify to 100 m spacing: (use only finite values)
-% isf = isfinite(lati); 
-% [lati,loni] = pspath(lati(isf),loni(isf),100); 
-% 
-% % Calculate ice velocity across the basin boundary: 
-% vci = itslive_interp('across',lati,loni);
-% 
-% % Get corresponding ice thickness: 
-% thi = bedmachine_interp('thickness',lati,loni,'antarctica');
-% 
-% % Calculate (crosstrack velocity)*(thickness) at each point: 
-% Ui = vci.*thi; 
-% 
-% Calculate total volume imbalance (requires multiplying by dx which is about 100m in this example) 
-% d = pathdistps(lati,loni); % distance along the path in meters
-% dx = gradient(d); % dx is 100 m in our example, but this general solution is better. 
-% Vol = sum(Ui.*dx,'omitnan'); 
-% 
-% % Convert Volume to mass (multiply by 917 kg/m^3, then 1e-12 to get to Gt) 
-% Mass = Vol*917*1e-12
-%        -128.56
-% 
-% Plot everything: 
+% v = itslive_interp(1, 'v', lat, lon, year=years); 
+% v_error = itslive_interp(1, 'v_error', lat, lon, year=years); 
 % 
 % figure
-% subsubplot(3,1,1) 
-% anomaly(d/1000,vci) 
-% axis tight
-% ylabel 'velocity across (m/yr)'
+% errorbar(years,v, v_error)
+% title 'Malaspina Glacier, Alaska'
+% xlim([2013 2023])
+% ylabel('Annual velocity (m yr^{-1})')
 % 
-% subsubplot(3,1,2) 
-% plot(d/1000,thi) 
-% axis tight
-% set(gca,'YAxisLocation','right') 
-% ylabel 'ice thickness (m)' 
+%% More Examples
 % 
-% subsubplot(3,1,3) 
-% anomaly(d/1000,Ui)
-% axis tight
-% ylabel 'local flow m^2/yr' 
-% xlabel 'distance around basin boundary (km)' 
-% 
-% % Another way of looking at it: 
-% figure
-% scatterps(lati,loni,30,Ui,'filled') 
-% cmocean('-balance','pivot') 
-% modismoaps('contrast','low') 
-% cb = colorbar
-% ylabel(cb,'ice flux m^2/yr')
-% 
-%% Example 5: Greenland 
-% Make a time series of an arbitrary point on Petermann Glacier, and 
-% we'll use (80.44 N, 59.19 W). 
-% 
-% yrs = 1985:2018; 
-% vi = itslive_interp('v',80.44,-59.19,'years',yrs,'region','gre'); 
-% vi_err = itslive_interp('v_err',80.44,-59.19,'years',yrs,'region','gre'); 
-% 
-% figure
-% boundedline(yrs,vi,vi_err,'nan','gap') % (can use errorbar instead but it's ugly) 
-% ylabel('velocity of a point (m/yr)') 
+% For more examples, see the documentation at:
+% https://github.com/chadagreene/ITS_LIVE.
 % 
 %% Citing this data
 % If this function is helpful for you, please cite
@@ -151,115 +93,48 @@ function zi = itslive_interp(variable,lati_or_xi,loni_or_yi,varargin)
 % 
 % See also itslive_data. 
 
-narginchk(3,Inf) 
-assert(~isnumeric(variable),'Error: First input must be a variable name.') 
+%% Input parsing 
+
+arguments
+    region {mustBeMember(region,[1:12 14 17:19])}
+    variable {mustBeText}
+    lati_or_xi {mustBeNumeric}
+    loni_or_yi {mustBeNumeric}
+    options.method {mustBeText} = "linear"
+    options.year (:,1) {mustBeNumeric} = 0000
+    options.filepath {mustBeText} = ""
+end
+
 assert(isequal(size(lati_or_xi),size(loni_or_yi)),'Error: Input query points must have matching dimensions.') 
 
-%% Parse Inputs 
-
-tmp = strncmpi(varargin,'region',3); 
-if any(tmp)
-   region = varargin{find(tmp)+1}; 
-else 
-   region = 'ANT'; 
-end
-
-tmp = strncmpi(varargin,'years',4); 
-if any(tmp)
-   years = varargin{find(tmp)+1}; 
-   annual = true; 
-else 
-   annual = false; 
-end
-
-% Are inputs georeferenced coordinates or projected meters?
-if islatlon(lati_or_xi,loni_or_yi)
-   switch lower(region) 
-      case {'ala','can','gre','ice','sra'}
-         if exist('ll2psn.m','file')==2
-            [xi,yi] = ll2psn(lati_or_xi,loni_or_yi); 
-         else
-            assert(exist('projcrs.m','file')==2,'The ALA,CAN,GRE,ICE, and SRA projections require either: (Arctic Mapping Tools, which is free on File Exchange) OR (Matlab 2020b or later AND Matlab''s Mapping Toolbox).') 
-            proj = projcrs(3413,'authority','EPSG'); 
-            [xi,yi] = projfwd(proj,lati_or_xi,loni_or_yi); 
-         end
-      case 'ant'
-         assert(exist('ll2ps.m','file')==2,'Cannot find ll2ps, which is an essential function in Antarctic Mapping Tools.')
-         [xi,yi] = ll2ps(lati_or_xi,loni_or_yi); % The ll2ps function is in the Antarctic Mapping Tools package.
-      case 'hma'
-         assert(exist('projcrs.m','file')==2,'Sorry, the HMA projection requires Matlab 2020b or later AND the Mapping Toolbox. I, too, wish things could be different.') 
-         proj = projcrs(102027,'authority','ESRI'); 
-         [xi,yi] = projfwd(proj,lati_or_xi,loni_or_yi); 
-      case 'pat'
-         assert(exist('projcrs.m','file')==2,'Sorry, the PAT projection requires Matlab 2020b or later AND the Mapping Toolbox. I, too, wish things could be different.') 
-         proj = projcrs(32718,'authority','EPSG'); 
-         [xi,yi] = projfwd(proj,lati_or_xi,loni_or_yi); 
-      otherwise
-         error('Unsupported region. So far only ANT and HMA are supported, but email me and I will be happy to add support for other regions.')
-   end
-
-else 
-   xi = lati_or_xi;
-   yi = loni_or_yi;    
-end
-
-
-tmp = strncmpi(varargin,'method',4); 
-if any(tmp)
-   InterpMethod = varargin{find(tmp)+1}; 
-else
-   if ismember(lower(variable),{'rock','ice','ocean'})
-      InterpMethod = 'nearest'; 
-   else
-      InterpMethod = 'linear'; 
-   end
-end
-
-tmp = strncmpi(varargin,'years',4); 
-if any(tmp)
-   years = varargin{find(tmp)+1}; 
-   annual = true; 
-else 
-   annual = false; 
-end
-
-tmp = strcmpi(varargin,'path'); 
-if any(tmp)
-   filepath = varargin{find(tmp)+1}; 
-else
-   filepath = []; 
-end
-
 if ismember(lower(variable),{'along','across'})
-   CrossTrack = true; 
-   assert(strcmpi(region,'ANT'),'Along or across track velocities are only supported for Antarctica.')
+   FluxGate = true; 
 else
-   CrossTrack = false; 
+   FluxGate = false; 
+end
+
+%% Coordinate transformations
+
+if islatlon(lati_or_xi,loni_or_yi)
+    assert(license('test','map_toolbox'), "Sorry, inputting geo coordinates into itslive_interp requires MATLAB's Mapping Toolbox. Try transforming the coordinates yourself (via ll2psn for polar regions, ll2ps for Antarctica, or check MATLAB's File Exchange for UTM converters for other regions.), then enter xi,yi instead of lati,loni into itslive_interp.")
+    [xi,yi] = geo2itslive(region, lati_or_xi,loni_or_yi); 
+else
+    xi = lati_or_xi; 
+    yi = loni_or_yi; 
 end
 
 %% Load data: 
 
-if CrossTrack
-   
-   if annual
-      [vx,x,y] = itslive_data('vx',xi,yi,'buffer',1,'years',years,'path',filepath,'region',region); 
-      vy = itslive_data('vy',xi,yi,'buffer',1,'years',years,'path',filepath,'region',region); 
-   else
-      [vx,x,y] = itslive_data('vx',xi,yi,'buffer',1,'path',filepath,'region',region); 
-      vy = itslive_data('vy',xi,yi,'buffer',1,'path',filepath,'region',region);
-   end
-   
+if FluxGate
+    [vx,x,y] = itslive_data(region, 'vx'   , xlim=xi, ylim=yi, buffer=1, year=options.year, filepath=options.filepath); 
+    vy       = itslive_data(region, 'vy'   , xlim=xi, ylim=yi, buffer=1, year=options.year, filepath=options.filepath); 
 else 
-   if annual
-      [Z,x,y] = itslive_data(variable,xi,yi,'buffer',1,'years',years,'path',filepath,'region',region); 
-   else
-      [Z,x,y] = itslive_data(variable,xi,yi,'buffer',1,'path',filepath,'region',region); 
-   end
+    [Z,x,y]  = itslive_data(region,variable, xlim=xi, ylim=yi, buffer=1, year=options.year, filepath=options.filepath); 
 end
 
 %% Interpolate: 
 
-if CrossTrack
+if FluxGate
    
    % Preallocate: 
    vxi = NaN(size(xi,1),size(xi,2),size(vx,3)); 
@@ -267,8 +142,8 @@ if CrossTrack
 
    % Interpolate: 
    for k = 1:size(vx,3)
-      vxi(:,:,k) = interp2(x,y,vx(:,:,k),xi,yi,InterpMethod); 
-      vyi(:,:,k) = interp2(x,y,vy(:,:,k),xi,yi,InterpMethod); 
+      vxi(:,:,k) = interp2(x,y,vx(:,:,k),xi,yi,options.method); 
+      vyi(:,:,k) = interp2(x,y,vy(:,:,k),xi,yi,options.method); 
    end
    
 else
@@ -288,7 +163,7 @@ else
 
       % Interpolate: 
       for k = 1:size(Z,3)
-         zi(:,:,k) = interp2(x,y,Z(:,:,k),xi,yi,InterpMethod); 
+         zi(:,:,k) = interp2(x,y,Z(:,:,k),xi,yi,options.method); 
       end
    end
 end
@@ -296,12 +171,16 @@ end
 
 %% Convert to along/across track components:
 
-if CrossTrack
+if FluxGate
    
    % Calculate along-track angles
-   alongtrackdist = pathdistps(xi,yi); % cumulative distance along path in meters
-   fx = gradient(xi,alongtrackdist); 
-   fy = gradient(yi,alongtrackdist);
+   if isrow(x)
+      di = [0,cumsum(hypot(diff(xi),diff(yi)))]; % Cumulative sum of distances 
+   else
+      di = [0;cumsum(hypot(diff(xi),diff(yi)))];
+   end
+   fx = gradient(xi,di); 
+   fy = gradient(yi,di);
    theta = atan2(fy,fx);          
 
    % Convert x and y components to cross-track component: 
@@ -323,6 +202,99 @@ end
 
 if isequal([size(zi,1) size(zi,1)],[1 1])
    zi = squeeze(zi); 
+end
+
+end
+
+function tf = islatlon(lat,lon)
+% islatlon determines whether lat,lon is likely to represent geographical
+% coordinates. 
+% 
+%% Citing Antarctic Mapping Tools
+% This function was developed for Antarctic Mapping Tools for Matlab (AMT). If AMT is useful for you,
+% please cite our paper: 
+% 
+% Greene, C. A., Gwyther, D. E., & Blankenship, D. D. Antarctic Mapping Tools for Matlab. 
+% Computers & Geosciences. 104 (2017) pp.151-157. 
+% http://dx.doi.org/10.1016/j.cageo.2016.08.003
+% 
+% @article{amt,
+%   title={{Antarctic Mapping Tools for \textsc{Matlab}}},
+%   author={Greene, Chad A and Gwyther, David E and Blankenship, Donald D},
+%   journal={Computers \& Geosciences},
+%   year={2017},
+%   volume={104},
+%   pages={151--157},
+%   publisher={Elsevier}, 
+%   doi={10.1016/j.cageo.2016.08.003}, 
+%   url={http://www.sciencedirect.com/science/article/pii/S0098300416302163}
+% }
+%   
+%% Syntax
+% 
+% tf = islatlon(lat,lon) returns true if all values in lat are numeric
+% between -90 and 90 inclusive, and all values in lon are numeric between 
+% -180 and 360 inclusive. 
+% 
+%% Example 1: A single location
+% 
+% islatlon(110,30)
+%    = 0
+% 
+% because 110 is outside the bounds of latitude values. 
+% 
+%% Example 2: A grid
+% 
+% [lon,lat] = meshgrid(-180:180,90:-1:-90); 
+% 
+% islatlon(lat,lon)
+%    = 1 
+% 
+% because all values in lat are between -90 and 90, and all values in lon
+% are between -180 and 360.  What if it's really, really close? What if
+% just one value violates these rules? 
+% 
+% lon(1) = -180.002; 
+% 
+% islatlon(lat,lon)
+%    = 0
+% 
+%% Author Info
+% This function was written by Chad A. Greene of the University of Texas at
+% Austin's Institute for Geophysics (UTIG). http://www.chadagreene.com. 
+% March 30, 2015. 
+% 
+% See also wrapTo180, wrapTo360, projfwd, and projinv.  
+
+% Make sure there are two inputs: 
+narginchk(2,2)
+
+% Set default output: 
+tf = true; 
+
+%% If *any* inputs don't look like lat,lon, assume none of them are lat,lon. 
+
+if ~isnumeric(lat)
+    tf = false; 
+    return
+end
+
+if ~isnumeric(lon)
+    tf = false; 
+    return
+end
+if any(abs(lat(:))>90)
+    tf = false; 
+    return
+end
+
+if any(lon(:)>360)
+    tf = false; 
+    return
+end    
+
+if any(lon(:)<-180)
+    tf = false; 
 end
 
 end

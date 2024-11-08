@@ -1,46 +1,49 @@
-[![View ITS_LIVE Antarctic ice velocity data on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/72701-its_live-antarctic-ice-velocity-data)
+[![View ITS\_LIVE Antarctic ice velocity data on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/72701-ITS\_LIVE-antarctic-ice-velocity-data)
 
-![ITS_LIVE](https://its-live-data.s3.amazonaws.com/documentation/ITS_LIVE_logo_transparent_wht.png)
+![](ITS\_LIVE_v2_mosaic_regions.jpeg)
 
-# Functions for MATLAB 
-These MATLAB functions are intended to make it easy and efficient to work with [ITS_LIVE](https://its-live.jpl.nasa.gov/) velocity data. 
+The MATLAB functions in this repository are designed to make it easy and efficient to work with [ITS\_LIVE](https://its-live.jpl.nasa.gov/) version 2 velocity mosaic data. 
 
-![ITS_LIVE](itslive_velmap.jpg)
+# Data access/download
 
-## Function List 
-**`itslive_mosaic_downloader`** easily downloads all of the annual mosaics for any specified region. 
+Get the ITS\_LIVE v2 velocity mosaics in any of these ways: 
 
-**`itslive_data`** loads ITS_LIVE velocity mosaic data.
+* Explore and download velocity mosaics in NetCDF format through the [NSIDC ITS\_LIVE app](https://nsidc.org/apps/itslive), 
+* Download the annual and static mosaics [directly from from AWS](https://its-live-data.s3.amazonaws.com/index.html#velocity_mosaic/v2/), or 
+* If you know which region and years of mosaics you want, use the `itslive_mosaic_downloader` function included in this repo.  
 
-**`itslive_interp`** interpolates ITS_LIVE velocity mosaic data to specified locations. 
+After downloading the data, put the NetCDF(s) somewhere MATLAB can find them. I personally have a folder called `data`, and I have a [`startup.m`](https://www.mathworks.com/help/matlab/ref/startup.html) file in my home directory that contains this line:
 
-**`itslive_tilefun`** You probably won't need this function, but it loads multiple years of ITS\_LIVE velocity mosaic data in tiles and applies a specified function through time. Tiling is only necessary when memory issues arise when trying to load and process multiple years of ITS\_LIVE data all at once. (Requires the Climate Data Toolbox for Matlab.)
+`addpath(genpath('/Users/cgreene/Documents/data'))` 
 
-**`itslive_imagesc`** plots itslive velocity magnitude (speed) data as an `imagesc` plot. If an AMT polar stereographic map is already open, `itslive_imagesc` will only load and plot enough data to fill the current map. 
+which automatically adds the path to the `data` folder and all of its subfolders every time I start MATLAB. 
 
-**`itslive_quiver`** is equivalent to `itslive_imagesc`, but plots ITS_LIVE velocity data as quiver arrows. 
+# Functions 
 
-**`itslive_contour`** is equivalent to `itslive_imagesc`, but plots contours instead of scaled color. 
+**[`itslive_mosaic_downloader`](documentation/itslive_mosaic_downloader_documentation.md)** downloads all of the annual mosaics for any specified region. 
+
+**[`itslive_regions`](documentation/itslive_regions_documentation.md)** displays map above of ITS\_LIVE regions, which approximately correspond to RGI regions. 
+
+**[`itslive2geo`](documentation/itslive2geo_documentation.md)** transforms projected map coordinates to geographic coordinates. (Requires MATLAB's Mapping Toolbox)
+
+**[`geo2itslive`](documentation/geo2itslive_documentation.md)** transforms geographic coordinates to projected map coordinates corresponding to a given ITS\_LIVE velocity mosaic region. (Requires MATLAB's Mapping Toolbox)
+
+**[`itslive_data`](documentation/itslive_data_documentation.md)** loads ITS\_LIVE velocity mosaic data.
+
+**[`itslive_interp`](documentation/itslive_interp_documentation.md)** interpolates ITS\_LIVE velocity mosaic data to specified locations. 
+
+**[`itslive_imagesc`](documentation/itslive_imagesc_documentation.md)** plots itslive velocity magnitude (speed) data as an `imagesc` plot. If a map is already initialized, `itslive_imagesc` will only load and plot enough data to fill the current map. 
+
+**`itslive_quiver`** is equivalent to `itslive_imagesc`, but plots ITS\_LIVE velocity data as quiver arrows. 
 
 **`itslive_flowline`** calculates flowlines from itslive velocity mosaics. 
 
 **`itslive_displacement`** similar to `itslive_flowline`, but calculates the position of point(s) after a specified time interval. For example, where was a certain grid point 3.5 year ago? Enter its coordinates with a dt value of -3.5 to find out. 
 
-**`itslive_tsplot`** plots a single grid cell of IT_LIVE velocity observations as a timeseries plot. 
+# Major Updates 
+This repository and the functions in it were initially developed in 2019 for the release of ITS\_LIVE version 1. However, the mosaics in ITS\_LIVE version 2 were revamped, variable names changed, file naming conventions changed, and most of these functions required significant changes to work with the new mosaics. Accordingly, the version 2.0 updates to this repo in 2024 contain many breaking changes from previous versions. 
 
-## Requirements 
-Since these functions are currently just for the Antarctic, they rely on [Antarctic Mapping Tools for Matlab](http://www.mathworks.com/matlabcentral/fileexchange/47638), so you'll need to get that package if you don't already have it. 
-
-## Downloading data
-If you don't already have the velocity data, download the NetCDF version of the velocity data for your years of interest [here](https://nsidc.org/apps/itslive). If you only want the mosaic, I recommend the 240 m composite, which provides the error-weighted synthesis of all available data. 
-
-After downloading the data, put the NetCDF(s) somewhere Matlab can find them. I personally have a folder called `data`, and I have a [`startup.m`](https://www.mathworks.com/help/matlab/ref/startup.html) file in my home directory that contains this line:
-
-`addpath(genpath('/Users/cgreene/Documents/MATLAB/data'))` 
-
-which automatically adds the path to the `data` folder and all of it subfolders every time I start Matlab. 
-
-## Citing this dataset 
+# Citing this dataset 
 The ITS\_LIVE data and these functions are provided free of charge. All we ask is that you please cite the dataset, and if you're feeling extra generous please do me a kindness and cite my Antarctic Mapping Tools paper too. Wording might be something like, "Velocity data generated using auto-RIFT (Gardner et al., 2018) and provided by the NASA MEaSUREs ITS\_LIVE project (Gardner et al., 2019). Analysis was performed with Antarctic Mapping Tools for Matlab (Greene et al., 2017)"
 
 Gardner, A. S., M. A. Fahnestock, and T. A. Scambos, 2019 [update to time of data download]: ITS\_LIVE Regional Glacier and Ice Sheet Surface Velocities. Data archived at National Snow and Ice Data Center; doi:10.5067/6II6VW8LLWJ7.

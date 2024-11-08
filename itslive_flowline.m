@@ -8,6 +8,7 @@ function [lat_or_x,lon_or_y,d,v,t,h] = itslive_flowline(lati_or_xi,loni_or_yi,va
 %  [lat_or_x,lon_or_y,d,v,t,h] = itslive_flowline(...)
 %  [...] = itslive_flowline(...,'gl') 
 %  [...] = itslive_flowline(...,'region',region)
+%  [...] = itslive_flowline(...,'spacing',spacingInMeters)
 %  [...,h] = itslive_flowline(...,'plot',LineProperty,LineValue,...) 
 %  
 %% Description 
@@ -28,6 +29,9 @@ function [lat_or_x,lon_or_y,d,v,t,h] = itslive_flowline(lati_or_xi,loni_or_yi,va
 % [...] = itslive_flowline(...,'region',region) specifies a region as 'ALA', 'ANT', 
 % 'CAN', 'GRE', 'HMA', 'ICE', 'PAT', or 'SRA'. Default region is 'ANT'. 
 % 
+% [...] = itslive_flowline(...,'spacing',spacingInMeters) specifies
+% flowling spacing in meters. Default is 100. 
+%
 % [...,h] = itslive_flowline(...,'plot',LineProperty,LineValue,...) 
 % 
 %% Example 1: 
@@ -92,6 +96,15 @@ else
    region = 'ANT'; % antarctica by default
 end
 
+tmp = strncmpi(varargin,'spacing',4); 
+if any(tmp) 
+   spacing = varargin{find(tmp)+1}; 
+   tmp(find(tmp)+1)=1; 
+   varargin = varargin(~tmp); 
+else
+   spacing = 100; % m flowline spacing default
+end
+
 %% Load data
 
 [vx,x,y] = itslive_data('vx',xi,yi,'buffer',1000,'region',region); 
@@ -113,7 +126,7 @@ for k = 1:numel(lat_or_x)
    ytmp = [XY_minus{k}(:,2);XY_plus{k}(2:end,2)]; 
    isf = hypot(interp2(x,y,vx,xtmp,ytmp),interp2(x,y,vy,xtmp,ytmp))>0.5; % This makes sure only finite values are kept, and it doesn't get into the crazy shit that happens with tiny speeds close to basin boundaries. 
    
-   [lat_or_x{k},lon_or_y{k}] = pspath(xtmp(isf),ytmp(isf),100,'method','pchip'); % 100 m spacing
+   [lat_or_x{k},lon_or_y{k}] = pspath(xtmp(isf),ytmp(isf),spacing,'method','pchip'); % 100 m spacing
 end
   
 if nargout>2

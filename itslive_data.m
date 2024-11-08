@@ -1,90 +1,106 @@
-function [Z,Lat_or_x,Lon_or_y] = itslive_data(variable,varargin) 
-% itslive_data loads ITS-LIVE velocity data. 
+function [Z,Lat_or_x,Lon_or_y] = itslive_data(region,variable,options) 
+% itslive_data loads ITS_LIVE velocity data. 
 % 
 %% Syntax 
 % 
-%  Z = itslive_data(variable)
-%  Z = itslive_data(variable,lati,loni)
-%  Z = itslive_data(variable,xi,yi) 
-%  Z = itslive_data(...,'buffer',extrakm)
-%  Z = itslive_data(...,'year',years) 
-%  Z = itslive_data(...,'path',filepath) 
-%  Z = itslive_data(...,'region',region) 
+%  Z = itslive_data(region, variable)
+%  Z = itslive_data(..., xlim=xlim, ylim=ylim)
+%  Z = itslive_data(..., latlim=latlim, lonlim=lonlim)
+%  Z = itslive_data(..., buffer=buffer_km)
+%  Z = itslive_data(..., year=years)
+%  Z = itslive_data(..., filepath=path)
 %  [Z,x,y] = itslive_data(...) 
-%  [Z,Lat,Lon] = itslive_data(...,'geo')
+%  [Z,Lat,Lon] = itslive_data(...,geoout=true)
 % 
 %% Description 
 % 
-% Z = itslive_data(variable) loads an ITS_LIVE variable such as 'v', 'vx',
-% 'vy', 'vx_err', 'vy_err', 'v_err', 'date', 'dt', 'count', 'chip_size_max', 
-% 'ocean', 'rock', or 'ice'.
+% Z = itslive_data(region, variable) loads any gridded variable in the
+% ITS_LIVE v2 summary velocity mosaics for a specified region. The region
+% is a number between 1 (Alaska) and 19 (Antarctica). To view a map of the
+% regions, type itslive_regions. By default, the summary (0000) mosaics are
+% plotted. The input variable can be "v", "vx", "v_error", etc. 
+%  
+% Z = itslive_data(..., xlim=xlim, ylim=ylim) only loads data within 
+% specified map limits. With this syntax, xlim and ylim can be two-element
+% arrays indicating the minimum and maximum spatial extents of interest, or
+% you can enter many scattered points and the function will automatically
+% calculate the minimum and maximum values of the x and y limits. 
+%  
+% Z = itslive_data(..., latlim=latlim, lonlim=lonlim) similar to the xlim,
+% ylim above, but here geo coordinates are entered (Requires MATLAB's
+% Mapping Toolbox). 
+%  
+% Z = itslive_data(..., buffer=buffer_km) adds an extra buffer around the
+% limits specified by xlim,ylim or latlim,lonlim. The input buffer_km can
+% be a scalar value to add a specified buffer on all sides of the input
+% points, or can be a two-element array in the form [buffer_km_x buffer_km_y]. 
+%  
+% Z = itslive_data(..., year=years) specifies desired years for annual
+% mosaics. If years are not specified, only the summary mosaic (0000) is
+% loaded. If multiple years are specified, the output Z is a data cube
+% whose third dimension corresponds to each specified year. 
 % 
-% Z = itslive_data(variable,lati,loni) loads only enough ITS_LIVE data to fully
-% encompass the extents of lati,loni. 
+% Z = itslive_data(..., filepath=path) specifies a directory where the velocity
+% mosaic data reside. 
+%  
+% [Z,x,y] = itslive_data(...) also returns map coordinates x,y when three
+% outputs are requested. 
+%  
+% [Z,Lat,Lon] = itslive_data(...,geoout=true) returns 2D grids Lat,Lon of
+% geographic coordinates corresponding to each pixel in Z. (Requires
+% MATLAB's Mapping Toolbox). Note that for large grids such as all of
+% Antarctica at full resolution, this option might take a significant
+% amount of time to compute. 
 % 
-% Z = itslive_data(variable,xi,yi) as above, but for ps71 meters xi,yi. 
+%% Example 1: Iceland
+% Plot a summary mosaic of Iceland: 
 % 
-% Z = itslive_data(...,'buffer',extrakm) adds an extra buffer around the 
-% point(s) of interest. For example, Z = itslive_data('v',-77.85,166.67,'buffer',15) 
-% will load approximately a 30 km by 30 km grid with McMurdo Station in the middle. 
-% That is, a 15 km buffer on each side of the input coordinates. Use a two-element
-% buffer value such as [xbuf ybuf] to specify different buffer widths in the polar
-% sterographic x and y directions. 
+%  [v,x,y] = itslive_data(6, 'v');
 % 
-% Z = itslive_data(...,'year',years) specifies the year(s) of interest. By default
-% the error-weighted mean of all years is returned. 
+%  figure
+%  h = imagesc(x,y,v); 
+%  h.AlphaData = isfinite(v); % Makes missing data transparent. 
+%  axis xy image              % orients and scales properly 
+%  set(gca,'colorscale','log') 
+%  clim([1 1e3])              % sets color axis limits
 % 
-% Z = itslive_data(...,'path',filepath) specifies a filepath to the mosaic data. 
+%% Example 2: Pine Island Glacier, Antarctica
+% Load all the data in the Pine Island Glacier basin. PIG is in Antarctica, 
+% so we specify region 19. (This example uses Antarctic Mapping Tools.) 
+%  
+%  [lat,lon] = basin_data('imbie refined','pine island'); 
+%  [v,x,y] = itslive_data(19, 'v', latlim=lat, lonlim=lon); 
+%  
+%  figure 
+%  h = imagesc(x,y,v);
+%  h.AlphaData = isfinite(v);
+%  hold on
+%  plotps(lat,lon,'k')      % AMT function 
+%  set(gca,'colorscale','log') 
+%  clim([1 2e3])              
+%  
+%% Example 3: More Pine Island Glacier, Antarctica
+% Same as above, but this time add a 25 km buffer on all sides and only
+% for the year 2019: 
+%  
+%  [lat,lon] = basin_data('imbie refined','pine island'); % AMT function 
+%  [v,x,y] = itslive_data(19, 'v', latlim=lat, lonlim=lon, buffer=25, year=2019); 
+%  
+%  figure 
+%  h = imagesc(x,y,v);
+%  h.AlphaData = isfinite(v);   
+%  hold on
+%  plotps(lat,lon,'k')     % AMT function
+%  set(gca,'colorscale','log') 
+%  clim([1 2e3])    
+%
+%% More Examples
 % 
-% Z = itslive_data(...,'region',region) specifies a region as 'ALA', 'ANT', 
-% 'CAN', 'GRE', 'HMA', 'ICE', 'PAT', or 'SRA'. Default region is 'ANT'. 
-% 
-% [Z,x,y] = itslive_data(...) returns arrays of x,y coordinates in meters. The 
-% coordinates cooresponding to each grid cell in Z can then be obtained by 
-% [X,Y] = meshgrid(x,y).
-% 
-% [Z,Lat,Lon] = itslive_data(...,'geo') returns a Lat,Lon grid. Turns the 
-% x,y arrays into meshgrids and converts to geo coordinates via the ps2ll function. 
-% 
-%% Example 1: 
-% Load all velocity data: 
-% 
-% [v,x,y] = itslive_data('v'); 
-% 
-% imagescn(x,y,v) % A CDT function (can use imagesc instead) 
-% axis image  
-% 
-%% Example 2:
-% Load all the data in the Pine Island Glacier basin: 
-% 
-% [lat,lon] = basin_data('imbie refined','pine island'); % AMT function 
-% [v,x,y] = itslive_data('v',lat,lon); 
-% 
-% imagescn(x,y,v)      % CDT function (can use pcolor or imagesc instead)
-% hold on
-% plotps(lat,lon)      % AMT function to plot in polar stereographic
-% cmocean amp          % CDT function for colormap
-%% Example 3: 
-% Same as above, but this time use the x,y extents of the polar stereographic
-% map, and add a 5 km buffer on all sides. Also specify the filepath, and load
-% data from 2018: 
-% 
-% [vx,x2,y2] = itslive_data('vx',xlim,ylim,'path','/Users/cgreene/Documents/MATLAB/data','buffer',5,'year',2018); 
-% vy = itslive_data('vy',xlim,ylim,'path','/Users/cgreene/Documents/MATLAB/data','buffer',5,'year',2018); 
-% 
-% quiversc(x2,y2,vx,vy); % CDT function 
-% 
-%% Example 4: Greenland
-% Plot the speed of Greenland's ice. 
-% 
-% [v,x,y] = itslive_data('v','region','GRE'); 
-% 
-% figure
-% imagescn(x,y,v) % (or imagesc; axis xy and accept colored nans)
-% greenland('color',0.5*[1 1 1]) % outline of greenland coast 
+% For more examples, see the documentation at:
+% https://github.com/chadagreene/ITS_LIVE.
 % 
 %% Citing this data
-% If this function is helpful for you, please cite
+% If this function is helpful for you, please cite:
 % 
 % Gardner, A. S., M. A. Fahnestock, and T. A. Scambos, 2019 [update to time 
 % of data download]: ITS_LIVE Regional Glacier and Ice Sheet Surface Velocities.
@@ -95,113 +111,68 @@ function [Z,Lat_or_x,Lon_or_y] = itslive_data(variable,varargin)
 % East Antarctic ice discharge over the last 7 years, _Cryosphere,_ 12(2): 
 % 21?547, doi:10.5194/tc-12-521-2018.
 %
-% Greene, C. A., Gwyther, D. E., & Blankenship, D. D. Antarctic Mapping Tools  
-% for Matlab. Computers & Geosciences. 104 (2017) pp.151-157. 
-% http://dx.doi.org/10.1016/j.cageo.2016.08.003
-%
 %% Author Info
 % This function was written by Chad A. Greene, April 6, 2019. 
+% Updated for ITS_LIVE version 2 in November 2024. 
 % 
-% See also itslive_interp. 
+% See also itslive_regions and itslive_interp. 
 
-%% Initial error checks: 
+%% Input parsing 
 
-narginchk(1,Inf)
-assert(~isnumeric(variable),'Error: variable must be a string, e.g. ''bed'', ''surface'', ''mask'', etc') 
+arguments
+    region {mustBeMember(region,[1:12 14 17:19])}
+    variable {mustBeText}
+    options.xlim (:,:) {mustBeNumeric} = [-Inf Inf]
+    options.ylim (:,:) {mustBeNumeric} = [-Inf Inf]
+    options.latlim (:,:) {mustBeNumeric} = [-Inf Inf]
+    options.lonlim (:,:) {mustBeNumeric} = [-Inf Inf]
+    options.buffer (:,2) {mustBeNumeric} = 0
+    options.year (:,1) {mustBeNumeric} = 0000
+    options.filepath {mustBeText} = ""
+    options.geoout {mustBeA(options.geoout,"logical")} = false
+end
 
-%% Set defaults: 
-% NOTE: To update the dataset filename manually, change the filename in the 
-% switch statement in the "Define filename" section that appears around line 
-% 160 below.
+%% Parse spatial subsetting input preferences: 
 
-subset = false;  % use whole data set (not a regional subset) by default 
-extrakm = 0;     % zero buffer by default
-xyout = true;    % give x,y arrays grid by default
-region = 'ANT'; 
-annual = false;  % give the overall mosaic by default
-filepath = [];   % just find whichever data file matches the name by default. 
+subset = false; % by default
 
-%% Parse inputs: 
+% If either xlim or ylim are declared, make sure they're both declared: 
+if or(isfinite(options.xlim(1)) , isfinite(options.ylim(1)))
+    assert(and(isfinite(options.xlim(1)) , isfinite(options.ylim(1))), "If xlim or ylim are declared, both must be declared.")
+    subset = true; 
+    xi = options.xlim;
+    yi = options.ylim;   
+end
 
-if nargin>1
-   
-   % Which ice sheet? (Default is already set to Antarctica)
-   tmp = strncmpi(varargin,'region',3); 
-   if any(tmp)
-      region = varargin{find(tmp)+1}; 
-   end
-   
-   % Check for subset based on input coordinates: 
-   if isnumeric(varargin{1}) 
-      subset = true; 
-      lati_or_xi = varargin{1}; 
-      loni_or_yi = varargin{2}; 
-      
-      % Are inputs georeferenced coordinates or projected meters?
-      if islatlon(lati_or_xi,loni_or_yi)
-         switch lower(region) 
-            case {'ala','can','gre','ice','sra'}
-               if exist('ll2psn.m','file')==2
-                  [xi,yi] = ll2psn(lati_or_xi,loni_or_yi); 
-               else
-                  assert(exist('projcrs.m','file')==2,'The ALA,CAN,GRE,ICE, and SRA projections require either: (Arctic Mapping Tools, which is free on File Exchange) OR (Matlab 2020b or later AND Matlab''s Mapping Toolbox).') 
-                  proj = projcrs(3413,'authority','EPSG'); 
-                  [xi,yi] = projfwd(proj,lati_or_xi,loni_or_yi); 
-               end
-            case 'ant'
-               assert(exist('ll2ps.m','file')==2,'Cannot find ll2ps, which is an essential function in Antarctic Mapping Tools.')
-               [xi,yi] = ll2ps(lati_or_xi,loni_or_yi); % The ll2ps function is in the Antarctic Mapping Tools package.
-            case 'hma'
-               assert(exist('projcrs.m','file')==2,'Sorry, the HMA projection requires Matlab 2020b or later AND the Mapping Toolbox. I, too, wish things could be different.') 
-               proj = projcrs(102027,'authority','ESRI'); 
-               [xi,yi] = projfwd(proj,lati_or_xi,loni_or_yi); 
-            case 'pat'
-               assert(exist('projcrs.m','file')==2,'Sorry, the PAT projection requires Matlab 2020b or later AND the Mapping Toolbox. I, too, wish things could be different.') 
-               proj = projcrs(32718,'authority','EPSG'); 
-               [xi,yi] = projfwd(proj,lati_or_xi,loni_or_yi); 
-            otherwise
-               error('Unsupported region. So far only ANT and HMA are supported, but email me and I will be happy to add support for other regions.')
-         end
+% If either latlim or lonlim are declared, make sure they're both declared: 
+if or(isfinite(options.latlim(1)) , isfinite(options.lonlim(1)))
+    assert(and(isfinite(options.latlim(1)) , isfinite(options.lonlim(1))), "If latlim or lonlim are declared, both must be declared.")
+    subset = true; 
+    [xi, yi] = geo2itslive(region, options.latlim, options.lonlim); 
+end
 
-      else 
-         xi = lati_or_xi;
-         yi = loni_or_yi;    
-      end
+% If xlim or latlim are declared, make sure that only one is declared: 
+if subset
+    assert(xor(isfinite(options.xlim(1)) , isfinite(options.latlim(1))), "Spatial subsetting limits can be declared in map coordinates or geo coordinates, but not both.")
+end
 
-      % Add a buffer around the edges of the data:
-      tmp = strncmpi(varargin,'buffer',3); 
-      if any(tmp)
-         extrakm = varargin{find(tmp)+1}; 
-         assert(numel(extrakm)<3,'Error: buffer must be one or two elements, in kilometers.') 
-      end
-   end
-
-   % Is the user requesting x and y outputs instead of default lat,lon grid? 
-   if any(strcmpi(varargin,'geo')) 
-      xyout = false; 
-   end
-
-   tmp = strncmpi(varargin,'years',4); 
-   if any(tmp)
-      years = varargin{find(tmp)+1}; 
-      annual = true; 
-   end
-   
-   tmp = strcmpi(varargin,'path'); 
-   if any(tmp)
-      filepath = varargin{find(tmp)+1}; 
-   end
-   
+if ~isequal(options.buffer, 0)
+    switch numel(options.buffer)
+        case 1
+            extrakm = options.buffer .* [1 1]; 
+        case 2
+            extrakm = options.buffer; 
+        otherwise
+            error("Buffer value must be either a scalar or a two-element array.")
+    end
 end
 
 %% Define filename: 
-% DEFINE DATASET FILENAMES HERE! 
 
-filename = [upper(region),'_G0240_0000.nc']; 
+filename = ['ITS_LIVE_velocity_120m_RGI',num2str(region,'%02.f'),'A_',num2str(options.year(1),'%04.f'),'_v02.nc']; 
+assert(exist(fullfile(options.filepath,filename),'file')==2,['Error: cannot find ',filename,'.']) 
 
-assert(exist(fullfile(filepath,filename),'file')==2,['Error: cannot find ',filename,'.']) 
-
-finfo = ncinfo(fullfile(filepath,filename)); 
+finfo = ncinfo(fullfile(options.filepath,filename)); 
 varNames = {finfo.Variables.Name};
 if ~any(strcmpi(varNames,variable))
    disp(['Error: Cannot find the specified variable ',variable,'. It should be one of these:'])
@@ -213,18 +184,14 @@ end
 
 % If user only wants vectors, give 'em to 'em and exit the function: 
 if ismember(lower(variable),{'x','y'})
-   Z = ncread(fullfile(filepath,filename),variable); 
+   Z = ncread(fullfile(options.filepath,filename),variable); 
    return
 end
 
-x = ncread(fullfile(filepath,filename),'x'); 
-y = ncread(fullfile(filepath,filename),'y'); 
+x = ncread(fullfile(options.filepath,filename),'x'); 
+y = ncread(fullfile(options.filepath,filename),'y'); 
 
 if subset
-   
-   if isscalar(extrakm)
-      extrakm = [extrakm extrakm]; 
-   end
    
     % A crude manual fix for when a single xi,yi lies between pixels: 
     if isscalar(xi)
@@ -236,75 +203,39 @@ if subset
     yl = [min(yi(:))-extrakm(2)*1000 max(yi(:))+extrakm(2)*1000];
     
     % Region of rows and columns of pixels to read: 
-    ci=find((y>=yl(1))&(y<=yl(2)));
-    ri=find((x>=xl(1))&(x<=xl(2)));
+    ci = find((y>=yl(1)) & (y<=yl(2)));
+    ri = find((x>=xl(1)) & (x<=xl(2)));
 else
     ci = 1:length(y); 
     ri = 1:length(x); 
 end
 
 % Load data: 
-if annual
-   Z = NaN(length(ci),length(ri),length(years)); 
-   for k = 1:length(years) 
-      fn = fullfile(filepath,filename); 
-      fn(end-6:end-3) = num2str(years(k)); 
-      Z(:,:,k) = flipud(rot90(ncread(fn,variable,[ri(1) ci(1)],[length(ri) length(ci)])));
-   end
-else
-   Z = flipud(rot90(ncread(fullfile(filepath,filename),variable,[ri(1) ci(1)],[length(ri) length(ci)])));
-end 
+Z = NaN(numel(ci),numel(ri),numel(options.year)); 
+for k = 1:numel(options.year) 
+    fn = fullfile(options.filepath,['ITS_LIVE_velocity_120m_RGI',num2str(region,'%02.f'),'A_',num2str(options.year(k),'%04.f'),'_v02.nc']); 
+    Z(:,:,k) = permute(ncread(fn,variable,[ri(1) ci(1)],[length(ri) length(ci)]),[2 1 3]);
+end
 
-if ismember(lower(variable),{'rock','ocean','ice'})
+if ismember(lower(variable),{'sensor_flag','floatingice','landice'})
    Z = logical(Z); 
 else
-   % Take care of NaNs: 
-   Z(Z==-32767) = NaN; 
+   % % Take care of NaNs: should automatically be taken care of by ncread.
+   Z = double(Z); 
 end
 
 %% Final adjustments for the export: 
 
 % Give user coordinates if more than one output argument: 
 if nargout>1
-   if xyout
-      Lat_or_x = x(ri); 
-      Lon_or_y = y(ci); 
-   else
-      
-      % Meshgridding a whole continent of high res data might make the computer stop working, so warn the user for large datasets 
-      if (length(ri)*length(ci))>1e7
-         answer = questdlg('Warning: Gridding the geo coordinates of an area this large could slow your computer to a crawl. You may prefer to cancel and try again using the ''xy'' option. Do you wish to cancel?',...
-            'Memory Warning',...
-            'Go for it anyway','Cancel','Cancel'); 
-         if strcmp(answer,'Cancel')
-            return
-         end
-      end
-         
-      % Grid the points so we can get lat,lon coordinates of each grid point:  
-      [X,Y] = meshgrid(x(ri),y(ci));
-      
-      switch lower(region) 
-         case 'ant'
-            [Lat_or_x,Lon_or_y] = ps2ll(X,Y); 
-         case 'pat'
-            proj = projcrs(32718,'authority','EPSG'); 
-            [Lat_or_x,Lon_or_y] = projinv(proj,X,Y); 
-         case 'hma'
-            proj = projcrs(102027,'authority','ESRI'); 
-            [Lat_or_x,Lon_or_y] = projinv(proj,X,Y); 
-         otherwise
-            if exist('psn2ll.m','file')==2
-               [Lat_or_x,Lon_or_y] = psn2ll(X,Y); 
-            else
-               assert(exist('projcrs.m','file')==2,'The ALA,CAN,GRE,ICE, and SRA projections require either: (Arctic Mapping Tools, which is free on File Exchange) OR (Matlab 2020b or later AND Matlab''s Mapping Toolbox).') 
-               proj = projcrs(3413,'authority','EPSG'); 
-               [Lat_or_x,Lon_or_y] = projinv(proj,X,Y); 
-            end
-      end
+    if options.geoout
+        % Grid the points so we can get lat,lon coordinates of each grid point:  
+        [X, Y] = meshgrid(x(ri), y(ci));
+        [Lat_or_x, Lon_or_y] = itslive2geo(region, X, Y); 
+    else
+        Lat_or_x = x(ri); 
+        Lon_or_y = y(ci); 
    end
 end
-     
 
 end
-
