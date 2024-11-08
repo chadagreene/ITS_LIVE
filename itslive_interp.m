@@ -1,14 +1,7 @@
-function zi = itslive_interp(variable,lati_or_xi,loni_or_yi,varargin)
+function zi = itslive_interp(region,variable,lati_or_xi,loni_or_yi,options)
 % interpolates ITS_LIVE velocity data to specified points. 
 % 
 %% Syntax
-% 
-%  zi = itslive_interp(variable,lati,loni)
-%  zi = itslive_interp(variable,xi,yi)
-%  zi = itslive_interp(...,'path',filepath) 
-%  zi = itslive_interp(...,'region',region)
-%  zi = itslive_interp(...,'method',InterpMethod) 
-%  zi = itslive_interp(...,'year',years) 
 % 
 %% Description 
 % 
@@ -20,10 +13,6 @@ function zi = itslive_interp(variable,lati_or_xi,loni_or_yi,varargin)
 % zi = itslive_interp(variable,xi,yi) interpolates to the polar stereographic 
 % coordinates xi,yi in meters. 
 % 
-% zi = itslive_interp(...,'path',filepath) specifies a filepath to the mosaic data. 
-% 
-% zi = itslive_interp(...,'region',region) specifies a region as 'ALA', 'ANT', 
-% 'CAN', 'GRE', 'HMA', 'ICE', 'PAT', or 'SRA'. Default region is 'ANT'. 
 % 
 % zi = itslive_interp(...,'method',InterpMethod) specifies an interpolation 
 % method. Interpolation is linear by default, except for variables 'ocean', 
@@ -151,115 +140,48 @@ function zi = itslive_interp(variable,lati_or_xi,loni_or_yi,varargin)
 % 
 % See also itslive_data. 
 
-narginchk(3,Inf) 
-assert(~isnumeric(variable),'Error: First input must be a variable name.') 
+%% Input parsing 
+
+arguments
+    region {mustBeMember(region,[1:12 14 17:19])}
+    variable {mustBeText}
+    lati_or_xi {mustBeNumeric}
+    loni_or_yi {mustBeNumeric}
+    options.method {mustBeText} = "linear"
+    options.year (:,1) {mustBeNumeric} = 0000
+    options.filepath {mustBeText} = ""
+end
+
 assert(isequal(size(lati_or_xi),size(loni_or_yi)),'Error: Input query points must have matching dimensions.') 
 
-%% Parse Inputs 
-
-tmp = strncmpi(varargin,'region',3); 
-if any(tmp)
-   region = varargin{find(tmp)+1}; 
-else 
-   region = 'ANT'; 
-end
-
-tmp = strncmpi(varargin,'years',4); 
-if any(tmp)
-   years = varargin{find(tmp)+1}; 
-   annual = true; 
-else 
-   annual = false; 
-end
-
-% Are inputs georeferenced coordinates or projected meters?
-if islatlon(lati_or_xi,loni_or_yi)
-   switch lower(region) 
-      case {'ala','can','gre','ice','sra'}
-         if exist('ll2psn.m','file')==2
-            [xi,yi] = ll2psn(lati_or_xi,loni_or_yi); 
-         else
-            assert(exist('projcrs.m','file')==2,'The ALA,CAN,GRE,ICE, and SRA projections require either: (Arctic Mapping Tools, which is free on File Exchange) OR (Matlab 2020b or later AND Matlab''s Mapping Toolbox).') 
-            proj = projcrs(3413,'authority','EPSG'); 
-            [xi,yi] = projfwd(proj,lati_or_xi,loni_or_yi); 
-         end
-      case 'ant'
-         assert(exist('ll2ps.m','file')==2,'Cannot find ll2ps, which is an essential function in Antarctic Mapping Tools.')
-         [xi,yi] = ll2ps(lati_or_xi,loni_or_yi); % The ll2ps function is in the Antarctic Mapping Tools package.
-      case 'hma'
-         assert(exist('projcrs.m','file')==2,'Sorry, the HMA projection requires Matlab 2020b or later AND the Mapping Toolbox. I, too, wish things could be different.') 
-         proj = projcrs(102027,'authority','ESRI'); 
-         [xi,yi] = projfwd(proj,lati_or_xi,loni_or_yi); 
-      case 'pat'
-         assert(exist('projcrs.m','file')==2,'Sorry, the PAT projection requires Matlab 2020b or later AND the Mapping Toolbox. I, too, wish things could be different.') 
-         proj = projcrs(32718,'authority','EPSG'); 
-         [xi,yi] = projfwd(proj,lati_or_xi,loni_or_yi); 
-      otherwise
-         error('Unsupported region. So far only ANT and HMA are supported, but email me and I will be happy to add support for other regions.')
-   end
-
-else 
-   xi = lati_or_xi;
-   yi = loni_or_yi;    
-end
-
-
-tmp = strncmpi(varargin,'method',4); 
-if any(tmp)
-   InterpMethod = varargin{find(tmp)+1}; 
-else
-   if ismember(lower(variable),{'rock','ice','ocean'})
-      InterpMethod = 'nearest'; 
-   else
-      InterpMethod = 'linear'; 
-   end
-end
-
-tmp = strncmpi(varargin,'years',4); 
-if any(tmp)
-   years = varargin{find(tmp)+1}; 
-   annual = true; 
-else 
-   annual = false; 
-end
-
-tmp = strcmpi(varargin,'path'); 
-if any(tmp)
-   filepath = varargin{find(tmp)+1}; 
-else
-   filepath = []; 
-end
-
 if ismember(lower(variable),{'along','across'})
-   CrossTrack = true; 
-   assert(strcmpi(region,'ANT'),'Along or across track velocities are only supported for Antarctica.')
+   FluxGate = true; 
 else
-   CrossTrack = false; 
+   FluxGate = false; 
+end
+
+%% Coordinate transformations
+
+if islatlon(lati_or_xi,loni_or_yi)
+    assert(license('test','map_toolbox'), "Sorry, inputting geo coordinates into itslive_interp requires MATLAB's Mapping Toolbox. Try transforming the coordinates yourself (via ll2psn for polar regions, ll2ps for Antarctica, or check MATLAB's File Exchange for UTM converters for other regions.), then enter xi,yi instead of lati,loni into itslive_interp.")
+    [xi,yi] = geo2itslive(region, lati_or_xi,loni_or_yi); 
+else
+    xi = lati_or_xi; 
+    yi = loni_or_yi; 
 end
 
 %% Load data: 
 
-if CrossTrack
-   
-   if annual
-      [vx,x,y] = itslive_data('vx',xi,yi,'buffer',1,'years',years,'path',filepath,'region',region); 
-      vy = itslive_data('vy',xi,yi,'buffer',1,'years',years,'path',filepath,'region',region); 
-   else
-      [vx,x,y] = itslive_data('vx',xi,yi,'buffer',1,'path',filepath,'region',region); 
-      vy = itslive_data('vy',xi,yi,'buffer',1,'path',filepath,'region',region);
-   end
-   
+if FluxGate
+    [vx,x,y] = itslive_data(region, 'vx'   , xlim=xi, ylim=yi, buffer=1, year=options.year, filepath=options.filepath); 
+    vy       = itslive_data(region, 'vy'   , xlim=xi, ylim=yi, buffer=1, year=options.year, filepath=options.filepath); 
 else 
-   if annual
-      [Z,x,y] = itslive_data(variable,xi,yi,'buffer',1,'years',years,'path',filepath,'region',region); 
-   else
-      [Z,x,y] = itslive_data(variable,xi,yi,'buffer',1,'path',filepath,'region',region); 
-   end
+    [Z,x,y]  = itslive_data(region,variable, xlim=xi, ylim=yi, buffer=1, year=options.year, filepath=options.filepath); 
 end
 
 %% Interpolate: 
 
-if CrossTrack
+if FluxGate
    
    % Preallocate: 
    vxi = NaN(size(xi,1),size(xi,2),size(vx,3)); 
@@ -267,8 +189,8 @@ if CrossTrack
 
    % Interpolate: 
    for k = 1:size(vx,3)
-      vxi(:,:,k) = interp2(x,y,vx(:,:,k),xi,yi,InterpMethod); 
-      vyi(:,:,k) = interp2(x,y,vy(:,:,k),xi,yi,InterpMethod); 
+      vxi(:,:,k) = interp2(x,y,vx(:,:,k),xi,yi,options.method); 
+      vyi(:,:,k) = interp2(x,y,vy(:,:,k),xi,yi,options.method); 
    end
    
 else
@@ -288,7 +210,7 @@ else
 
       % Interpolate: 
       for k = 1:size(Z,3)
-         zi(:,:,k) = interp2(x,y,Z(:,:,k),xi,yi,InterpMethod); 
+         zi(:,:,k) = interp2(x,y,Z(:,:,k),xi,yi,options.method); 
       end
    end
 end
@@ -296,12 +218,16 @@ end
 
 %% Convert to along/across track components:
 
-if CrossTrack
+if FluxGate
    
    % Calculate along-track angles
-   alongtrackdist = pathdistps(xi,yi); % cumulative distance along path in meters
-   fx = gradient(xi,alongtrackdist); 
-   fy = gradient(yi,alongtrackdist);
+   if isrow(x)
+      di = [0,cumsum(hypot(diff(xi),diff(yi)))]; % Cumulative sum of distances 
+   else
+      di = [0;cumsum(hypot(diff(xi),diff(yi)))];
+   end
+   fx = gradient(xi,di); 
+   fy = gradient(yi,di);
    theta = atan2(fy,fx);          
 
    % Convert x and y components to cross-track component: 
@@ -326,3 +252,4 @@ if isequal([size(zi,1) size(zi,1)],[1 1])
 end
 
 end
+
