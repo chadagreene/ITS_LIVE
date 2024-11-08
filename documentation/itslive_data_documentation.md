@@ -2,7 +2,7 @@
 
 # `itslive_data` documentation
 
-### Syntax
+## Syntax
 
 ```matlab
 Z = itslive_data(region, variable)
@@ -15,7 +15,7 @@ Z = itslive_data(..., filepath=path)
 [Z,Lat,Lon] = itslive_data(...,geoout=true)
 ```
 
-### Description 
+## Description 
 
 `Z = itslive_data(region, variable)` loads any gridded variable in the ITS_LIVE v2 summary velocity mosaics for a specified region. The region is a number between 1 (Alaska) and 19 (Antarctica). To view a map of the regions, type `itslive_regions`. By default, the summary (0000) mosaics are plotted. The input variable can be `"v"`, `"vx"`, `"v_error"`, etc. 
  
@@ -33,7 +33,7 @@ Z = itslive_data(..., filepath=path)
  
 `[Z,Lat,Lon] = itslive_data(...,geoout=true)` returns 2D grids `Lat,Lon` of geographic coordinates corresponding to each pixel in `Z`. (Requires MATLAB's Mapping Toolbox). Note that for large grids such as all of Antarctica at full resolution, this option might take a significant amount of time to compute. 
 
-### Example 1: Iceland
+## Example 1: Iceland
 Plot a summary mosaic of Iceland: 
 
 ```matlab
@@ -49,7 +49,7 @@ exportgraphics(gcf,'itslive_data_documentation_iceland.jpg')
 ```
 ![](itslive_data_documentation_iceland.jpg)
 
-### Example 2: Pine Island Glacier, Antarctica
+## Example 2: Pine Island Glacier, Antarctica
 Load all the data in the Pine Island Glacier basin. PIG is in Antarctica, 
 so we specify region 19. (This example uses `plotps` from [Antarctic Mapping Tools](https://github.com/chadagreene/Antarctic-Mapping-Tools) and `basin_data` from [Antarctic boundaries](https://github.com/chadagreene/Antarctic-boundaries).) 
 
@@ -71,7 +71,7 @@ exportgraphics(gcf,'itslive_data_documentation_pig.jpg')
 ```
 ![](itslive_data_documentation_pig.jpg)
  
-### Example 3: More Pine Island Glacier, Antarctica
+## Example 3: More Pine Island Glacier, Antarctica
 Same as above, but this time add a 25 km buffer on all sides and only load data for the year 2019: 
  
 ```matlab
@@ -91,7 +91,7 @@ exportgraphics(gcf,'itslive_data_documentation_big_pig.jpg')
 ``` 
 ![](itslive_data_documentation_big_pig.jpg)
 
-### Example 4: Time Series at Malaspina Glacier
+## Example 4: Time Series at Malaspina Glacier
 
 Consider four points along Malaspina Glacier, Alaska, which are used as an example in the [ITS_LIVE widget](https://its-live.jpl.nasa.gov/app/index.html?lat=60.08343&lon=-140.46707&lat=60.02582&lon=-140.57831&lat=59.92546&lon=-140.72388&lat=59.83722&lon=-140.80765&z=9&x=1982-12-08&x=2025-04-25&y=-404&y=5915).
 

@@ -26,7 +26,7 @@ which automatically adds the path to the `data` folder and all of its subfolders
 
 **[`itslive_data`](documentation/itslive_data_documentation.md)** loads ITS_LIVE velocity mosaic data.
 
-**`itslive_interp`** interpolates ITS_LIVE velocity mosaic data to specified locations. 
+**[`itslive_interp`](documentation/itslive_interp_documentation.md)** interpolates ITS_LIVE velocity mosaic data to specified locations. 
 
 **`itslive_imagesc`** plots itslive velocity magnitude (speed) data as an `imagesc` plot. If a map is already initialized, `itslive_imagesc` will only load and plot enough data to fill the current map. 
 
@@ -43,7 +43,7 @@ which automatically adds the path to the `data` folder and all of its subfolders
 # Major Updates 
 This repository and the functions in it were initially developed in 2019 for the release of ITS_LIVE version 1. However, the mosaics in ITS_LIVE version 2 were revamped, variable names changed, file naming conventions changed, and most of these functions required significant changes to work with the new mosaics. Accordingly, the version 2.0 updates to this repo in 2024 contain many breaking changes from previous versions. 
 
-## Citing this dataset 
+# Citing this dataset 
 The ITS\_LIVE data and these functions are provided free of charge. All we ask is that you please cite the dataset, and if you're feeling extra generous please do me a kindness and cite my Antarctic Mapping Tools paper too. Wording might be something like, "Velocity data generated using auto-RIFT (Gardner et al., 2018) and provided by the NASA MEaSUREs ITS\_LIVE project (Gardner et al., 2019). Analysis was performed with Antarctic Mapping Tools for Matlab (Greene et al., 2017)"
 
 Gardner, A. S., M. A. Fahnestock, and T. A. Scambos, 2019 [update to time of data download]: ITS\_LIVE Regional Glacier and Ice Sheet Surface Velocities. Data archived at National Snow and Ice Data Center; doi:10.5067/6II6VW8LLWJ7.
