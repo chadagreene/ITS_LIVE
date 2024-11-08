@@ -1,6 +1,7 @@
-[&larr; Back to ITS_LIVE main page](../README.md)
+[&larr; Back to ITS\_LIVE main page](../README.md)
 
 # `itslive_data` documentation
+The `itslive_data` function reads ITS\_LIVE mosaic data into MATLAB. 
 
 ## Syntax
 
@@ -17,7 +18,7 @@ Z = itslive_data(..., filepath=path)
 
 ## Description 
 
-`Z = itslive_data(region, variable)` loads any gridded variable in the ITS_LIVE v2 summary velocity mosaics for a specified region. The region is a number between 1 (Alaska) and 19 (Antarctica). To view a map of the regions, type `itslive_regions`. By default, the summary (0000) mosaics are plotted. The input variable can be `"v"`, `"vx"`, `"v_error"`, etc. 
+`Z = itslive_data(region, variable)` loads any gridded variable in the ITS\_LIVE v2 summary velocity mosaics for a specified region. The region is a number between 1 (Alaska) and 19 (Antarctica). To view a map of the regions, type `itslive_regions`. By default, the summary (0000) mosaics are plotted. The input variable can be `"v"`, `"vx"`, `"v_error"`, etc. 
  
 `Z = itslive_data(..., xlim=xlim, ylim=ylim)` only loads data within  specified map limits. With this syntax, `xlim` and `ylim` can be two-element arrays indicating the minimum and maximum spatial extents of interest, or you can enter many scattered points and the function will automatically calculate the minimum and maximum values of the x and y limits. 
  
@@ -93,7 +94,7 @@ exportgraphics(gcf,'itslive_data_documentation_big_pig.jpg')
 
 ## Example 4: Time Series at Malaspina Glacier
 
-Consider four points along Malaspina Glacier, Alaska, which are used as an example in the [ITS_LIVE widget](https://its-live.jpl.nasa.gov/app/index.html?lat=60.08343&lon=-140.46707&lat=60.02582&lon=-140.57831&lat=59.92546&lon=-140.72388&lat=59.83722&lon=-140.80765&z=9&x=1982-12-08&x=2025-04-25&y=-404&y=5915).
+Consider four points along Malaspina Glacier, Alaska, which are used as an example in the [ITS\_LIVE widget](https://its-live.jpl.nasa.gov/app/index.html?lat=60.08343&lon=-140.46707&lat=60.02582&lon=-140.57831&lat=59.92546&lon=-140.72388&lat=59.83722&lon=-140.80765&z=9&x=1982-12-08&x=2025-04-25&y=-404&y=5915).
 
 Use the `itslive_data` function to load data for Region 1 (Alaska) surrounding the four points of interest. Add a 35 km buffer around the four points to provide a little extra context. And load the data for all the years from 2014 through 2022.
 
@@ -154,5 +155,5 @@ end
 ![](itslive_data_demo.gif)
 
 # Author Info
-The MATLAB functions in this repo and this documentation were written by Chad A. Greene of NASA/JPL. [The NASA MEaSUREs ITS_LIVE project](https://its-live.jpl.nasa.gov/) is by Alex S. Gardner and the ITS_LIVE team. 
+The MATLAB functions in this repo and this documentation were written by Chad A. Greene of NASA/JPL. [The NASA MEaSUREs ITS\_LIVE project](https://its-live.jpl.nasa.gov/) is by Alex S. Gardner and the ITS\_LIVE team. 
 

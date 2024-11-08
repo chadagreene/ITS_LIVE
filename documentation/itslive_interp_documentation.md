@@ -1,6 +1,7 @@
-[&larr; Back to ITS_LIVE main page](../README.md)
+[&larr; Back to ITS\_LIVE main page](../README.md)
 
 # `itslive_interp` documentation
+The `itslive_interp` function interpolates ITS\_LIVE velocity data to specified points.
 
 ## Syntax
 
@@ -15,7 +16,7 @@ v_across = = itslive_interp(region,'across',...)
 
 ## Description 
 
-`zi = itslive_interp(region,variable,xi,yi)` interpolates ITS_LIVE mosaic data for the specified region and variable, at the projected map coordinates xi, yi. The region is a number from 1 to 19 (type `itslive_regions` for a map). The variable can be `'v'`, `'vx'`, `'v_error'`, or any gridded variable in the ITS_LIVE v2 mosaics. Coordinates `xi,yi` correspond to the map units (m) in the projection of the specified region. 
+`zi = itslive_interp(region,variable,xi,yi)` interpolates ITS\_LIVE mosaic data for the specified region and variable, at the projected map coordinates xi, yi. The region is a number from 1 to 19 (type `itslive_regions` for a map). The variable can be `'v'`, `'vx'`, `'v_error'`, or any gridded variable in the ITS\_LIVE v2 mosaics. Coordinates `xi,yi` correspond to the map units (m) in the projection of the specified region. 
 
 `zi = itslive_interp(region,variable,lati,loni)` as above, but using geographic coordinates. 
 
@@ -47,7 +48,7 @@ exportgraphics(gcf,'itslive_interp_documentation_byrd.jpg')
 
 ## Example 2: Summary velocity values at Malaspina Glacier, Alaska 
 
-In the example above, we plotted a time series of annual velocities at a single location. Now let's plot the summary mosaic values (a multi-year average) for multiple locations at Malaspina Glacier, Alaska (region 1). These are the same locations that are plotted as the [default example in the ITS_LIVE widget](https://its-live.jpl.nasa.gov/app/index.html?lat=60.08343&lon=-140.46707&lat=60.02582&lon=-140.57831&lat=59.92546&lon=-140.72388&lat=59.83722&lon=-140.80765&z=9&x=1982-12-08&x=2025-04-25&y=-404&y=5915). These locations on Malaspina are also used in the [`itslive_data`](itslive_data_documentation.md) documentation to create this map: 
+In the example above, we plotted a time series of annual velocities at a single location. Now let's plot the summary mosaic values (a multi-year average) for multiple locations at Malaspina Glacier, Alaska (region 1). These are the same locations that are plotted as the [default example in the ITS\_LIVE widget](https://its-live.jpl.nasa.gov/app/index.html?lat=60.08343&lon=-140.46707&lat=60.02582&lon=-140.57831&lat=59.92546&lon=-140.72388&lat=59.83722&lon=-140.80765&z=9&x=1982-12-08&x=2025-04-25&y=-404&y=5915). These locations on Malaspina are also used in the [`itslive_data`](itslive_data_documentation.md) documentation to create this map: 
 
 ![](itslive_data_documentation_malaspina.jpg) 
 
@@ -109,9 +110,9 @@ exportgraphics(gcf,'itslive_interp_documentation_malaspina_annual.jpg')
 ![](itslive_interp_documentation_malaspina_annual.jpg)
 
 ## Example 4: Grid of points 
-This example interpolates ITS_LIVE velocity trend data to a 50 m resolution grid. 
+This example interpolates ITS\_LIVE velocity trend data to a 50 m resolution grid. 
 
-*Note that the native resolution of ITS_LIVE velocity data is 120 m, so interpolating to 50 m meets Nyquist and doesn't require lowpass filtering before interpolation to prevent aliasing. The `itslive_interp` function does not perform any type of antialiasing.*
+*Note that the native resolution of ITS\_LIVE velocity data is 120 m, so interpolating to 50 m meets Nyquist and doesn't require lowpass filtering before interpolation to prevent aliasing. The `itslive_interp` function does not perform any type of antialiasing.*
 
 Below we use just base MATLAB functions until we get to the optional fancy stuff. For those steps you'll need [`cmocean`](https://github.com/chadagreene/cmocean) for the colormap. Also, `modismog` for the background image mosaic of Greenland and `scalebarpsn` for the scalebar, which are both part of [Arctic Mapping Tools](https://www.mathworks.com/matlabcentral/fileexchange/63324-arctic-mapping-tools). 
 
@@ -219,5 +220,5 @@ Mass = Vol*917*1e-12
 That is, a net 136 Gt/yr of ice flows out of Pine Island Glacier's grounded basin. 
 
 # Author Info
-The MATLAB functions in this repo and this documentation were written by Chad A. Greene of NASA/JPL. [The NASA MEaSUREs ITS_LIVE project](https://its-live.jpl.nasa.gov/) is by Alex S. Gardner and the ITS_LIVE team. 
+The MATLAB functions in this repo and this documentation were written by Chad A. Greene of NASA/JPL. [The NASA MEaSUREs ITS\_LIVE project](https://its-live.jpl.nasa.gov/) is by Alex S. Gardner and the ITS\_LIVE team. 
 

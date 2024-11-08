@@ -1,5 +1,5 @@
 function zi = itslive_interp(region,variable,lati_or_xi,loni_or_yi,options)
-% interpolates ITS_LIVE velocity data to specified points. 
+% itslive_interp interpolates ITS_LIVE velocity data to specified points. 
 % 
 %% Syntax
 % 
