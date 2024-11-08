@@ -22,7 +22,7 @@ which automatically adds the path to the `data` folder and all of its subfolders
 
 **`itslive_mosaic_downloader`** downloads all of the annual mosaics for any specified region. 
 
-**`itslive_regions`** displays map above of ITS\_LIVE regions, which approximately correspond to RGI regions. 
+**[`itslive_regions`](documentation/itslive_regions_documentation.md)** displays map above of ITS\_LIVE regions, which approximately correspond to RGI regions. 
 
 **[`itslive_data`](documentation/itslive_data_documentation.md)** loads ITS\_LIVE velocity mosaic data.
 

@@ -18,7 +18,7 @@ Z = itslive_data(..., filepath=path)
 
 ## Description 
 
-`Z = itslive_data(region, variable)` loads any gridded variable in the ITS\_LIVE v2 summary velocity mosaics for a specified region. The region is a number between 1 (Alaska) and 19 (Antarctica). To view a map of the regions, type `itslive_regions`. By default, the summary (0000) mosaics are plotted. The input variable can be `"v"`, `"vx"`, `"v_error"`, etc. 
+`Z = itslive_data(region, variable)` loads any gridded variable in the ITS\_LIVE v2 summary velocity mosaics for a specified region. The region is a number between 1 (Alaska) and 19 (Antarctica). To view a map of the regions, type [`itslive_regions`](itslive_regions_documentation.md). By default, the summary (0000) mosaics are plotted. The input variable can be `"v"`, `"vx"`, `"v_error"`, etc. 
  
 `Z = itslive_data(..., xlim=xlim, ylim=ylim)` only loads data within  specified map limits. With this syntax, `xlim` and `ylim` can be two-element arrays indicating the minimum and maximum spatial extents of interest, or you can enter many scattered points and the function will automatically calculate the minimum and maximum values of the x and y limits. 
  

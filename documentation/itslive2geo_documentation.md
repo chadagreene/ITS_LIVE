@@ -11,7 +11,7 @@ The `itslive2geo` function transforms projected map coordinates to geographic co
 
 ## Description 
 
-`[lat, lon] = itslive2geo(region, x, y)` converts projected map coordinates `x` and `y` into geographic coordinates `lat` and `lon`. The region must be a number from 1 to 19 corresponding to ITS\_LIVE regions (which approximately match RGI regions). For a map of ITS\_LIVE regions, type `itslive_regions`. 
+`[lat, lon] = itslive2geo(region, x, y)` converts projected map coordinates `x` and `y` into geographic coordinates `lat` and `lon`. The region must be a number from 1 to 19 corresponding to ITS\_LIVE regions (which approximately match RGI regions). For a map of ITS\_LIVE regions, type [`itslive_regions`](itslive_regions_documentation.md). 
 
 ## Example
 Convert this spot on Malaspina Glacier Alaska (Region 1) to map coordinates: 

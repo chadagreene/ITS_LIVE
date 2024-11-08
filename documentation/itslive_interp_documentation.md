@@ -16,7 +16,7 @@ v_across = = itslive_interp(region,'across',...)
 
 ## Description 
 
-`zi = itslive_interp(region,variable,xi,yi)` interpolates ITS\_LIVE mosaic data for the specified region and variable, at the projected map coordinates xi, yi. The region is a number from 1 to 19 (type `itslive_regions` for a map). The variable can be `'v'`, `'vx'`, `'v_error'`, or any gridded variable in the ITS\_LIVE v2 mosaics. Coordinates `xi,yi` correspond to the map units (m) in the projection of the specified region. 
+`zi = itslive_interp(region,variable,xi,yi)` interpolates ITS\_LIVE mosaic data for the specified region and variable, at the projected map coordinates xi, yi. The region is a number from 1 to 19 (type [`itslive_regions`](itslive_regions_documentation.md) for a map). The variable can be `'v'`, `'vx'`, `'v_error'`, or any gridded variable in the ITS\_LIVE v2 mosaics. Coordinates `xi,yi` correspond to the map units (m) in the projection of the specified region. 
 
 `zi = itslive_interp(region,variable,lati,loni)` as above, but using geographic coordinates. 
 
