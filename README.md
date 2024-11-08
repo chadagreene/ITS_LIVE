@@ -24,21 +24,21 @@ which automatically adds the path to the `data` folder and all of its subfolders
 
 **[`itslive_regions`](documentation/itslive_regions_documentation.md)** displays map above of ITS\_LIVE regions, which approximately correspond to RGI regions. 
 
+**[`itslive2geo`](documentation/itslive2geo_documentation.md)** transforms projected map coordinates to geographic coordinates. (Requires MATLAB's Mapping Toolbox)
+
+**[`geo2itslive`](documentation/geo2itslive_documentation.md)** transforms geographic coordinates to projected map coordinates corresponding to a given ITS\_LIVE velocity mosaic region. (Requires MATLAB's Mapping Toolbox)
+
 **[`itslive_data`](documentation/itslive_data_documentation.md)** loads ITS\_LIVE velocity mosaic data.
 
 **[`itslive_interp`](documentation/itslive_interp_documentation.md)** interpolates ITS\_LIVE velocity mosaic data to specified locations. 
 
-**`itslive_imagesc`** plots itslive velocity magnitude (speed) data as an `imagesc` plot. If a map is already initialized, `itslive_imagesc` will only load and plot enough data to fill the current map. 
+**[`itslive_imagesc`](documentation/itslive_imagesc_documentation.md)** plots itslive velocity magnitude (speed) data as an `imagesc` plot. If a map is already initialized, `itslive_imagesc` will only load and plot enough data to fill the current map. 
 
 **`itslive_quiver`** is equivalent to `itslive_imagesc`, but plots ITS\_LIVE velocity data as quiver arrows. 
 
 **`itslive_flowline`** calculates flowlines from itslive velocity mosaics. 
 
 **`itslive_displacement`** similar to `itslive_flowline`, but calculates the position of point(s) after a specified time interval. For example, where was a certain grid point 3.5 year ago? Enter its coordinates with a dt value of -3.5 to find out. 
-
-**[`itslive2geo`](documentation/itslive2geo_documentation.md)** transforms projected map coordinates to geographic coordinates. (Requires MATLAB's Mapping Toolbox)
-
-**[`geo2itslive`](documentation/geo2itslive_documentation.md)** transforms geographic coordinates to projected map coordinates corresponding to a given ITS\_LIVE velocity mosaic region. (Requires MATLAB's Mapping Toolbox)
 
 # Major Updates 
 This repository and the functions in it were initially developed in 2019 for the release of ITS\_LIVE version 1. However, the mosaics in ITS\_LIVE version 2 were revamped, variable names changed, file naming conventions changed, and most of these functions required significant changes to work with the new mosaics. Accordingly, the version 2.0 updates to this repo in 2024 contain many breaking changes from previous versions. 

@@ -1,36 +1,45 @@
-function h = itslive_imagesc(variable,varargin)
-% itslive_imagesc plots itslive data on polar stereographic projection map. 
+function h = itslive_imagesc(region,variable,options)
+% itslive_imagesc plots ITS_LIVE data in regionally projected map coordinates.
 % 
 %% Syntax
 % 
-%  itslive_imagesc
-%  itslive_imagesc(variable) 
-%  itslive_imagesc(variable,'alpha',alpha) 
-%  itslive_imagesc(...,'region',region)
+%  itslive_imagesc(region)
+%  itslive_imagesc(region,variable) 
+%  itslive_imagesc(...,'alpha',alpha) 
+%  itslive_imagesc(...,filepath=path)
 %  h = itslive_imagesc(...)
 % 
 %% Description 
 % 
-% itslive_imagesc plots ITS_LIVE ice speed as an imagesc object. 
+% itslive_imagesc(region) plots ITS_LIVE ice speed as an imagesc object for 
+% the specified ITS_LIVE mosaic region. For a map of regions, type
+% itslive_regions. 
 % 
-% itslive_imagesc(variable) plots any ITS_LIVE variable such as 'v', 'vx','vy', 
-% 'vx_err', 'vy_err', 'v_err', 'date', 'dt', 'count', 'chip_size_max', 
-% 'ocean', 'rock', or 'ice'. If a figure is open and axes are current before
+% itslive_imagesc(region,variable) plots any ITS_LIVE variable such as 'v', 'vx','vy', 
+% 'vx_error', 'landice', etc. If a figure is open and axes are current before
 % calling itslive_imagesc, only enough data are loaded to fill the extents
 % of the current axes. If no axes are current before calling itslive_imagesc, 
-% the whole continent is loaded and plotted. Note: Plotting the full continent
-% might take a few seconds...
+% the entire region is loaded and plotted. Note: Plotting an entire large
+% region such as Antarctica might take a long time.
 % 
-% itslive_imagesc(variable,'alpha',alpha) sets the transparency to a value 
+% itslive_imagesc(...,'alpha',alpha) sets the transparency to a value 
 % between 0 (totally transparent) and 1 (totally opaque). Default value is 1, 
-% (except for NaNs, which are always set to 0).
-% 
-% itslive_imagesc(...,'region',region) specifies a region as 'ALA', 'ANT', 
-% 'CAN', 'GRE', 'HMA', 'ICE', 'PAT', or 'SRA'. Default region is 'ANT'. 
+% (except for NaNs, which are always set to 0). 
+%
+% itslive_imagesc(...,filepath=path) specifies a directory where the velocity
+% mosaic data reside. 
 % 
 % h = itslive_imagesc(...) returns a handle h of the image object. 
 % 
-%% Example 1
+%% Example 1: All of Greenland 
+% Make a map of Greenland's velocity: 
+% 
+% figure
+% itslive_imagesc(5)
+% set(gca,'colorscale','log') 
+% clim([1 10e3])
+% 
+%% Example 2: Pine Island Glacier, Antarctica 
 % Zoom in to a small region of interest (do this before calling itslive_imagesc
 % so it will only load the necessary data), plot a background MODIS Mosaic
 % of Antarctica image, and then overlay a semitransparent ice speed layer, 
@@ -38,19 +47,9 @@ function h = itslive_imagesc(variable,varargin)
 %
 % mapzoomps('pine island glacier') 
 % modismoaps('contrast','low')
-% itslive_imagesc('v','alpha',0.8) 
-% itslive_quiver
-% 
-%% Example 2
-% Show all the velocity data in High Mountain Asia. 
-% 
-% figure
-% itslive_imagesc('v','region','hma'); 
-% caxis([0 100]) 
-% 
-% % zoom in and add velocity arrows: 
-% axis([-1648836.00   -1621098.00     840867.00     860680.00])
-% itslive_quiver('region','hma','density',100) 
+% itslive_imagesc(19,'v','alpha',0.8) 
+% set(gca,'colorscale','log') 
+% clim([1 3000])
 % 
 %% Citing this data
 % If this function is helpful for you, please cite
@@ -64,36 +63,19 @@ function h = itslive_imagesc(variable,varargin)
 % East Antarctic ice discharge over the last 7 years, _Cryosphere,_ 12(2): 
 % 21?547, doi:10.5194/tc-12-521-2018.
 %
-% Greene, C. A., Gwyther, D. E., & Blankenship, D. D. Antarctic Mapping Tools  
-% for Matlab. Computers & Geosciences. 104 (2017) pp.151-157. 
-% http://dx.doi.org/10.1016/j.cageo.2016.08.003
-%
 %% Author Info
-% Chad A. Greene wrote this in May of 2019. 
+% Chad A. Greene wrote this in May of 2019, rewritten Nov 2024 for
+% the release of ITS_LIVE version 2. 
 %
 % See also: itslive_quiver and itslive_data. 
 
 %% Parse inputs: 
 
-narginchk(0,3)
-
-if nargin==0
-   variable = 'v'; 
-end
-
-tmp = strcmpi(varargin,'alpha'); 
-if any(tmp)
-   alpha = varargin{find(tmp)+1}; 
-   assert(alpha>=0 & alpha<=1,'Alpha must be a scalar between 0 and 1') 
-else
-   alpha = 1; 
-end
-
-tmp = strncmpi(varargin,'region',3); 
-if any(tmp)
-   region = varargin{find(tmp)+1}; 
-else
-   region = 'ANT'; 
+arguments 
+   region {mustBeMember(region,[1:12 14 17:19])}
+   variable {mustBeText} = 'v'
+   options.alpha (1,1) {mustBeInRange(options.alpha,0,1)} = 1
+   options.filepath {mustBeText} = ""
 end
 
 %% Check the presence of a current axes: 
@@ -108,9 +90,12 @@ end
 %% Load data: 
 
 if NewMap
-   [Z,x,y] = itslive_data(variable,'xy','region',region); 
+   [Z,x,y] = itslive_data(region,variable, filepath=options.filepath); 
 else
-   [Z,x,y] = itslive_data(variable,ax(1:2),ax(3:4),'xy','region',region); 
+   [Z,x,y] = itslive_data(region,variable,...
+       xlim = ax(1:2),...
+       ylim = ax(3:4),...
+       filepath = options.filepath); 
 end 
 
 %% Plot things: 
@@ -119,7 +104,7 @@ hold on
 h = imagesc(x,y,Z); 
 
 % Set transparency: 
-h.AlphaData = alpha*isfinite(Z);
+h.AlphaData = options.alpha*isfinite(Z);
 
 axis xy
 daspect([1 1 1]) 
