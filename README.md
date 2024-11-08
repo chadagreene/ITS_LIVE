@@ -20,7 +20,7 @@ which automatically adds the path to the `data` folder and all of its subfolders
 
 # Functions 
 
-**`itslive_mosaic_downloader`** downloads all of the annual mosaics for any specified region. 
+**[`itslive_mosaic_downloader`](documentation/itslive_mosaic_downloader_documentation.md)** downloads all of the annual mosaics for any specified region. 
 
 **[`itslive_regions`](documentation/itslive_regions_documentation.md)** displays map above of ITS\_LIVE regions, which approximately correspond to RGI regions. 
 
