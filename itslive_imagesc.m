@@ -51,6 +51,11 @@ function h = itslive_imagesc(region,variable,options)
 % set(gca,'colorscale','log') 
 % clim([1 3000])
 % 
+%% More Examples
+% 
+% For more examples, see the documentation at:
+% https://github.com/chadagreene/ITS_LIVE.
+% 
 %% Citing this data
 % If this function is helpful for you, please cite
 % 

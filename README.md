@@ -34,7 +34,7 @@ which automatically adds the path to the `data` folder and all of its subfolders
 
 **[`itslive_imagesc`](documentation/itslive_imagesc_documentation.md)** plots itslive velocity magnitude (speed) data as an `imagesc` plot. If a map is already initialized, `itslive_imagesc` will only load and plot enough data to fill the current map. 
 
-**`itslive_quiver`** is equivalent to `itslive_imagesc`, but plots ITS\_LIVE velocity data as quiver arrows. 
+**[`itslive_quiver`](documentation/itslive_quiver_documentation.md)** is equivalent to `itslive_imagesc`, but plots ITS\_LIVE velocity data as quiver arrows. 
 
 **`itslive_flowline`** calculates flowlines from itslive velocity mosaics. 
 

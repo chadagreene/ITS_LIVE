@@ -1,7 +1,7 @@
 [&larr; Back to ITS\_LIVE main page](../README.md)
 
 # `itslive_imagesc` documentation
-The `itslive_imagesc` plots ITS\_LIVE data in regionally projected map coordinates.
+The `itslive_imagesc` function plots ITS\_LIVE data in regionally projected map coordinates.
 
 ## Syntax
 
@@ -15,11 +15,9 @@ h = itslive_imagesc(...)
 
 ## Description 
 
-`itslive_imagesc(region)` plots ITS\_LIVE ice speed as an `imagesc` object for 
-the specified ITS\_LIVE mosaic region. For a map of ITS\_LIVE regions, type [`itslive_regions`](itslive_regions_documentation.md). 
+`itslive_imagesc(region)` plots ITS\_LIVE ice speed as an `imagesc` object for the specified ITS\_LIVE mosaic region. For a map of ITS\_LIVE regions, type [`itslive_regions`](itslive_regions_documentation.md). 
 
-`itslive_imagesc(region,variable)` plots any ITS_LIVE variable such as `'v'`, `'vx'`, `'vy'`, `'vx_error'`, `'landice'`, etc. If a figure is open and axes are current before
-calling `itslive_imagesc`, only enough data are loaded to fill the extents of the current axes. If no axes are current before calling `itslive_imagesc`, the entire region is loaded and plotted. *Note: Plotting an entire large region such as Antarctica might take a long time.*
+`itslive_imagesc(region,variable)` plots any ITS_LIVE variable such as `'v'`, `'vx'`, `'vy'`, `'vx_error'`, `'landice'`, etc. If a figure is open and axes are current before calling `itslive_imagesc`, only enough data are loaded to fill the extents of the current axes. If no axes are current before calling `itslive_imagesc`, the entire region is loaded and plotted. *Note: Plotting an entire large region such as Antarctica might take a long time.*
 
 `itslive_imagesc(...,'alpha',alpha)` sets the transparency to a value between 0 (totally transparent) and 1 (totally opaque). Default value is 1, (except for NaNs, which are always set to 0). 
 

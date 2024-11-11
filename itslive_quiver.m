@@ -1,18 +1,20 @@
-function h = itslive_quiver(varargin)
-% itslive_quiver plots ice velocity arrows on a polar stereographic map. 
+function h = itslive_quiver(region, varargin)
+% itslive_quiver plots ice velocity arrows on a regionally projected map. 
+% 
+% Tip: Zoom to desired map extents BEFORE calling itslive_quiver.
 % 
 %% Syntax
 % 
-%  itslive_quiver
-%  itslive_quiver('colorspec')
+%  itslive_quiver(region)
+%  itslive_quiver(region,'colorspec')
 %  itslive_quiver(...Name,Value) 
 %  itslive_quiver(...,'density','DensityFactor') 
-%  itslive_quiver(...,'region',region) 
 %  h = itslive_quiver(...) 
 % 
 %% Description 
 %  
-% itslive_quiver plots a quiver plot on the current map. 
+% itslive_quiver(region) plots a quiver plot on the current map. The region
+% is a number between 1 and 19. For a map of regions, type itslive_regions.
 % 
 % itslive_quiver('colorspec') specifies a color of the vectors, like 'r'
 % for red. 
@@ -25,19 +27,26 @@ function h = itslive_quiver(varargin)
 % but if your plot is too crowded you may specify a lower DensityFactor 
 % (and/or adjust the markersize). 
 % 
-% itslive_imagesc(...,'region',region) specifies a region as 'ALA', 'ANT', 
-% 'CAN', 'GRE', 'HMA', 'ICE', 'PAT', or 'SRA'. Default region is 'ANT'. 
-% 
 % h = itslive_quiver(...) returns a handle h of the plotted quiver object.
 % 
 %% Examples
 % 
-% mapzoomps('pine island glacier') 
-% itslive_quiver
+% % First set axis limits around Jakobshavn Glacier, Greenland: 
+% axis([-206557    -129930   -2296636   -2258698])
 % 
-% or 
-% mapzoomps('pine island glacier') 
-% itslive_quiver('r','density',100)
+% % Then add a quiver plot: 
+% itslive_quiver(5) 
+% 
+% % Alternatively, plot thick red arrows: 
+% itslive_quiver(5, 'r', LineWidth=2) 
+% 
+% % Define the 'density' to make more or fewer arrows (default is 75): 
+% itslive_quiver(5, 'density', 200) 
+% 
+%% More Examples
+% 
+% For more examples, see the documentation at:
+% https://github.com/chadagreene/ITS_LIVE.
 % 
 %% Citing this data
 % If this function is helpful for you, please cite
@@ -51,14 +60,16 @@ function h = itslive_quiver(varargin)
 % East Antarctic ice discharge over the last 7 years, _Cryosphere,_ 12(2): 
 % 21?547, doi:10.5194/tc-12-521-2018.
 %
-% Greene, C. A., Gwyther, D. E., & Blankenship, D. D. Antarctic Mapping Tools  
-% for Matlab. Computers & Geosciences. 104 (2017) pp.151-157. 
-% http://dx.doi.org/10.1016/j.cageo.2016.08.003
-%
 %% Author Info
-% Chad A. Greene wrote this in May 2019. 
+% Chad A. Greene wrote this in May 2019, updated Nov 2024 for ITS_LIVE v2. 
 %
 % See also: itslive_imagesc and itslive_data. 
+
+%% Input checks
+
+narginchk(1,Inf)
+assert(isscalar(region), 'Region must be a number between 1 and 19.')
+assert(ismember(region, [1:12 14 17:19]), 'Region must be a number between 1 and 19.')
 
 %% Check the presence of a current axes: 
 
@@ -69,31 +80,29 @@ else
    NewMap = false; 
 end
 
-tmp = strncmpi(varargin,'region',3); 
-if any(tmp) 
-   region = varargin{find(tmp)+1}; 
-   tmp(find(tmp)+1)=1; 
-   varargin = varargin(~tmp); 
-else
-   region = 'ANT'; % antarctica by default
-end
-
 %% Load data: 
 
 if NewMap
-   answer = questdlg('The itslive_quiver function works best if you are already zoomed to the extents of interest, however you do not have a map open or zoomed. Loading the entire continent will be slow and the plot won''t be pretty. Continue anyway?',...
+   answer = questdlg('The itslive_quiver function works best if you are already zoomed to the extents of interest, however you do not have a map open or zoomed. Loading the entire continent could be slow and the plot might not be pretty. Continue anyway?',...
       'Performance Warning',...
       'Go for it anyway','Cancel','Cancel'); 
    if strcmp(answer,'Cancel')
       return
    end
 
-   [vx,x,y] = itslive_data('vx','xy','region',region); 
-   vy = itslive_data('vy','xy','region',region); 
+   [vx,x,y] = itslive_data(region, 'vx'); 
+   vy = itslive_data(region, 'vy'); 
+   landice = itslive_data(region, 'landice'); 
 else
-   [vx,x,y] = itslive_data('vx',ax(1:2),ax(3:4),'buffer',10,'xy','region',region); % A little bit of buffer to make the resizing nice. 
-   vy = itslive_data('vy',ax(1:2),ax(3:4),'buffer',10,'xy','region',region); 
+   [vx,x,y] = itslive_data(region,'vx','xlim',ax(1:2),'ylim',ax(3:4),'buffer',10); % A little bit of buffer to make the resizing nice. 
+   vy = itslive_data(region,'vy','xlim',ax(1:2),'ylim',ax(3:4),'buffer',10); 
+   landice = itslive_data(region,'landice','xlim',ax(1:2),'ylim',ax(3:4),'buffer',10); 
+
 end 
+
+% Mask out buffer zones around edges of ice regions:  
+vx(~landice) = NaN; 
+vy(~landice) = NaN; 
 
 %% Plot things: 
 
