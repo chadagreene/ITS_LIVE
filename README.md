@@ -38,8 +38,6 @@ which automatically adds the path to the `data` folder and all of its subfolders
 
 **[`itslive_flowline`](documentation/itslive_flowline_documentation.md)** calculates flowlines from itslive velocity mosaics. 
 
-**`itslive_displacement`** similar to `itslive_flowline`, but calculates the position of point(s) after a specified time interval. For example, where was a certain grid point 3.5 year ago? Enter its coordinates with a dt value of -3.5 to find out. 
-
 # Major Updates 
 This repository and the functions in it were initially developed in 2019 for the release of ITS\_LIVE version 1. However, the mosaics in ITS\_LIVE version 2 were revamped, variable names changed, file naming conventions changed, and most of these functions required significant changes to work with the new mosaics. Accordingly, the version 2.0 updates to this repo in 2024 contain many breaking changes from previous versions. 
 
