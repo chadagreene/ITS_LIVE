@@ -32,7 +32,7 @@ Z = itslive_data(..., filepath=path)
  
 `[Z,x,y] = itslive_data(...)` also returns map coordinates `x,y` when three outputs are requested. 
  
-`[Z,Lat,Lon] = itslive_data(...,geoout=true)` returns 2D grids `Lat,Lon` of geographic coordinates corresponding to each pixel in `Z`. (Requires MATLAB's Mapping Toolbox). Note that for large grids such as all of Antarctica at full resolution, this option might take a significant amount of time to compute. 
+`[Z,Lat,Lon] = itslive_data(...,geoout=true)` returns 2D grids `Lat,Lon` of geographic coordinates corresponding to each pixel in `Z`. (Requires MATLAB's Mapping Toolbox). Note that for large grids such as all of Antarctica at full resolution, the coordinate transformation might take several seconds to compute. 
 
 ## Example 1: Iceland
 Plot a summary mosaic of Iceland: 

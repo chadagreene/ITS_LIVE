@@ -22,7 +22,7 @@ which automatically adds the path to the `data` folder and all of its subfolders
 
 **[`itslive_mosaic_downloader`](documentation/itslive_mosaic_downloader_documentation.md)** downloads all of the annual mosaics for any specified region. 
 
-**[`itslive_regions`](documentation/itslive_regions_documentation.md)** displays map above of ITS\_LIVE regions, which approximately correspond to RGI regions. 
+**[`itslive_regions`](documentation/itslive_regions_documentation.md)** displays a map of ITS\_LIVE regions, which approximately correspond to RGI regions. 
 
 **[`itslive2geo`](documentation/itslive2geo_documentation.md)** transforms projected map coordinates to geographic coordinates. (Requires MATLAB's Mapping Toolbox)
 
@@ -32,17 +32,17 @@ which automatically adds the path to the `data` folder and all of its subfolders
 
 **[`itslive_interp`](documentation/itslive_interp_documentation.md)** interpolates ITS\_LIVE velocity mosaic data to specified locations. 
 
-**[`itslive_imagesc`](documentation/itslive_imagesc_documentation.md)** plots itslive velocity magnitude (speed) data as an `imagesc` plot. If a map is already initialized, `itslive_imagesc` will only load and plot enough data to fill the current map. 
+**[`itslive_imagesc`](documentation/itslive_imagesc_documentation.md)** plots ITS\_LIVE mosaic data as an `imagesc` plot.
 
-**[`itslive_quiver`](documentation/itslive_quiver_documentation.md)** is equivalent to `itslive_imagesc`, but plots ITS\_LIVE velocity data as quiver arrows. 
+**[`itslive_quiver`](documentation/itslive_quiver_documentation.md)** plots ITS\_LIVE velocity data as quiver arrows. 
 
-**[`itslive_flowline`](documentation/itslive_flowline_documentation.md)** calculates flowlines from itslive velocity mosaics. 
+**[`itslive_flowline`](documentation/itslive_flowline_documentation.md)** calculates flowlines from ITS\_LIVE velocity mosaics. 
 
 # Major Updates 
-This repository and the functions in it were initially developed in 2019 for the release of ITS\_LIVE version 1. However, the mosaics in ITS\_LIVE version 2 were revamped, variable names changed, file naming conventions changed, and most of these functions required significant changes to work with the new mosaics. Accordingly, the version 2.0 updates to this repo in 2024 contain many breaking changes from previous versions. 
+This repository and the functions in it were initially developed in 2019 for the release of ITS\_LIVE version 1. The mosaics in ITS\_LIVE version 2 have now been revamped, variable names changed, file naming conventions changed, and most of the old functions required significant changes to work with the new mosaics. Accordingly, the version 2.0 updates to this repo in November 2024 contain many breaking changes from previous versions. 
 
 # Citing this dataset 
-The ITS\_LIVE data and these functions are provided free of charge. All we ask is that you please cite the dataset, and if you're feeling extra generous please do me a kindness and cite my Antarctic Mapping Tools paper too. Wording might be something like, "Velocity data generated using auto-RIFT (Gardner et al., 2018) and provided by the NASA MEaSUREs ITS\_LIVE project (Gardner et al., 2019). Analysis was performed with Antarctic Mapping Tools for Matlab (Greene et al., 2017)"
+The ITS\_LIVE data and these functions are provided free of charge. All we ask is that you please cite the dataset, and if relevant cite my Antarctic Mapping Tools paper too. Wording might be something like, "Velocity data generated using auto-RIFT (Gardner et al., 2018) and provided by the NASA MEaSUREs ITS\_LIVE project (Gardner et al., 2019). Analysis was performed with Antarctic Mapping Tools for Matlab (Greene et al., 2017)"
 
 Gardner, A. S., M. A. Fahnestock, and T. A. Scambos, 2019 [update to time of data download]: ITS\_LIVE Regional Glacier and Ice Sheet Surface Velocities. Data archived at National Snow and Ice Data Center; doi:10.5067/6II6VW8LLWJ7.
 

@@ -26,10 +26,10 @@ v_across = = itslive_interp(region,'across',...)
 
 `v_across = itslive_interp(region, 'across',...)` calculates the across-track velocity for a path such as a grounding line `lati,loni` or `xi,yi`. This is designed for calculating the flow across a flux gate. 
 
-`v_along = itslive_interp(region, 'along',...)` the complement to the across track component.  
+`v_along = itslive_interp(region, 'along',...)` the complement to the across track component. The value of `v_along` should be about the same as `v` 
 
 ## Example 1: Time Series at Byrd Glacier, Antarctica 
-Plot a time series of annual velocities at a location near the grounding line of Byrd Glacier, Antarctica. The location is 80.38°S, 158.75°E and the region number for Antarctica is 19: 
+Plot a time series of annual velocities at a location near the grounding line of Byrd Glacier, Antarctica. The location is (80.38°S,158.75°E) and the region number for Antarctica is 19: 
 
 ```matlab 
 year = 2014:2022; 
