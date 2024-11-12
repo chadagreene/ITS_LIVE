@@ -96,8 +96,13 @@ end
 
 if NewMap
    [Z,x,y] = itslive_data(region,variable, filepath=options.filepath); 
+   landice = itslive_data(region,'landice', filepath=options.filepath); 
 else
    [Z,x,y] = itslive_data(region,variable,...
+       xlim = ax(1:2),...
+       ylim = ax(3:4),...
+       filepath = options.filepath); 
+   landice = itslive_data(region,'landice',...
        xlim = ax(1:2),...
        ylim = ax(3:4),...
        filepath = options.filepath); 
@@ -109,7 +114,7 @@ hold on
 h = imagesc(x,y,Z); 
 
 % Set transparency: 
-h.AlphaData = options.alpha*isfinite(Z);
+h.AlphaData = options.alpha * (isfinite(Z) & landice);
 
 axis xy
 daspect([1 1 1]) 

@@ -10,7 +10,7 @@ Get the ITS\_LIVE v2 velocity mosaics in any of these ways:
 
 * Explore and download velocity mosaics in NetCDF format through the [NSIDC ITS\_LIVE app](https://nsidc.org/apps/itslive), 
 * Download the annual and static mosaics [directly from from AWS](https://its-live-data.s3.amazonaws.com/index.html#velocity_mosaic/v2/), or 
-* If you know which region and years of mosaics you want, use the `itslive_mosaic_downloader` function included in this repo.  
+* If you know which region and years of mosaics you want, use the [`itslive_mosaic_downloader`](documentation/itslive_mosaic_downloader_documentation.md) function included in this repo.  
 
 After downloading the data, put the NetCDF(s) somewhere MATLAB can find them. I personally have a folder called `data`, and I have a [`startup.m`](https://www.mathworks.com/help/matlab/ref/startup.html) file in my home directory that contains this line:
 
@@ -36,7 +36,7 @@ which automatically adds the path to the `data` folder and all of its subfolders
 
 **[`itslive_quiver`](documentation/itslive_quiver_documentation.md)** is equivalent to `itslive_imagesc`, but plots ITS\_LIVE velocity data as quiver arrows. 
 
-**`itslive_flowline`** calculates flowlines from itslive velocity mosaics. 
+**[`itslive_flowline`](documentation/itslive_flowline_documentation.md)** calculates flowlines from itslive velocity mosaics. 
 
 **`itslive_displacement`** similar to `itslive_flowline`, but calculates the position of point(s) after a specified time interval. For example, where was a certain grid point 3.5 year ago? Enter its coordinates with a dt value of -3.5 to find out. 
 
