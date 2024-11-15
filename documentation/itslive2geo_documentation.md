@@ -1,7 +1,7 @@
 [&larr; Back to ITS\_LIVE main page](../README.md)
 
 # `itslive2geo` documentation
-The `itslive2geo` function transforms projected map coordinates to geographic coordinates. (Requires MATLAB's Mapping Toolbox.)
+The `itslive2geo` function transforms projected map coordinates to geographic coordinates.[^1]
 
 ## Syntax
 
@@ -38,4 +38,4 @@ lon =
 
 # Author Info
 The MATLAB functions in this repo and this documentation were written by Chad A. Greene of NASA/JPL. [The NASA MEaSUREs ITS\_LIVE project](https://its-live.jpl.nasa.gov/) is by Alex S. Gardner and the ITS\_LIVE team. 
-
+[^1]:Requires MATLAB's Mapping Toolbox.
