@@ -18,21 +18,21 @@ Z = itslive_data(..., filepath=path)
 
 ## Description 
 
-`Z = itslive_data(region, variable)` loads any gridded variable in the ITS\_LIVE v2 summary velocity mosaics for a specified region. The region is a number between 1 (Alaska) and 19 (Antarctica). To view a map of the regions, type [`itslive_regions`](itslive_regions_documentation.md). By default, the summary (0000) mosaics are plotted. The input variable can be `"v"`, `"vx"`, `"v_error"`, etc. 
+`Z = itslive_data(region, variable)` loads any gridded variable in the ITS\_LIVE v2 summary velocity mosaics for a specified region. The region is a number between 1 (Alaska) and 19 (Antarctica). To view a map of the regions, type [`itslive_regions`](itslive_regions_documentation.md). By default, the climatology mosaics are plotted. The input variable can be `"v"`, `"vx"`, `"v_error"`, etc. 
  
 `Z = itslive_data(..., xlim=xlim, ylim=ylim)` only loads data within  specified map limits. With this syntax, `xlim` and `ylim` can be two-element arrays indicating the minimum and maximum spatial extents of interest, or you can enter many scattered points and the function will automatically calculate the minimum and maximum values of the x and y limits. 
  
-`Z = itslive_data(..., latlim=latlim, lonlim=lonlim)` similar to the `xlim`, `ylim` above, but here geo coordinates are entered (Requires MATLAB's Mapping Toolbox). 
+`Z = itslive_data(..., latlim=latlim, lonlim=lonlim)` similar to the `xlim`, `ylim` above, but here geo coordinates are entered. [^1] 
  
 `Z = itslive_data(..., buffer=buffer_km)` adds an extra buffer around the limits specified by `xlim`,`ylim` or `latlim`,`lonlim`. The input `buffer_km` can be a scalar value to add a specified buffer on all sides of the input points, or can be a two-element array in the form `[buffer_km_x buffer_km_y]`. 
  
-`Z = itslive_data(..., year=years)` specifies desired years for annual mosaics. If years are not specified, only the summary mosaic (0000) is loaded. If multiple years are specified, the output `Z` is a data cube whose third dimension corresponds to each specified year. 
+`Z = itslive_data(..., year=years)` specifies desired years for annual mosaics. If years are not specified, only the climatology mosaic is loaded. If multiple years are specified, the output `Z` is a data cube whose third dimension corresponds to each specified year. 
 
 `Z = itslive_data(..., filepath=path)` specifies a directory where the velocity mosaic data reside. 
  
 `[Z,x,y] = itslive_data(...)` also returns map coordinates `x,y` when three outputs are requested. 
  
-`[Z,Lat,Lon] = itslive_data(...,geoout=true)` returns 2D grids `Lat,Lon` of geographic coordinates corresponding to each pixel in `Z`. (Requires MATLAB's Mapping Toolbox). Note that for large grids such as all of Antarctica at full resolution, the coordinate transformation might take several seconds to compute. 
+`[Z,Lat,Lon] = itslive_data(...,geoout=true)` returns 2D grids `Lat,Lon` of geographic coordinates corresponding to each pixel in `Z` [^1]. Note that for large grids such as all of Antarctica at full resolution, the coordinate transformation might take several seconds to compute. 
 
 ## Example 1: Iceland
 Plot a summary mosaic of Iceland: 
@@ -98,7 +98,7 @@ Consider four points along Malaspina Glacier, Alaska, which are used as an examp
 
 Use the `itslive_data` function to load data for Region 1 (Alaska) surrounding the four points of interest. Add a 35 km buffer around the four points to provide a little extra context. And load the data for all the years from 2014 through 2022.
 
-*Below I'm using the `geo2itslive` function to transform geo coordinates to projected meters for Region 1. The `geo2itslive` requires MATLAB's Mapping Toolbox. If you don't have that, you can transform the coordinates for Region 1 into EPSG 3413 using the `ll2psn` function in [Arctic Mapping Tools](https://github.com/chadagreene/arctic-mapping-tools).*
+*Below I'm using the `geo2itslive` function to transform geo coordinates to projected meters for Region 1 [^1]. The `geo2itslive` requires MATLAB's Mapping Toolbox. If you don't have that, you can transform the coordinates for Region 1 into EPSG 3413 using the `ll2psn` function in [Arctic Mapping Tools](https://github.com/chadagreene/arctic-mapping-tools).*
 
 ```matlab
 % Define locations and years of interest: 
@@ -156,4 +156,4 @@ end
 
 # Author Info
 The MATLAB functions in this repo and this documentation were written by Chad A. Greene of NASA/JPL. [The NASA MEaSUREs ITS\_LIVE project](https://its-live.jpl.nasa.gov/) is by Alex S. Gardner and the ITS\_LIVE team. 
-
+[^1]: (Requires MATLAB's Mapping Toolbox)
