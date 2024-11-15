@@ -26,7 +26,7 @@ which automatically adds the path to the `data` folder and all of its subfolders
 
 **[`itslive2geo`](documentation/itslive2geo_documentation.md)** transforms projected map coordinates to geographic coordinates[^1].
 
-**[`geo2itslive`](documentation/geo2itslive_documentation.md)** transforms geographic coordinates to projected map coordinates corresponding to a given ITS\_LIVE velocity mosaic region[^1].
+**[`geo2itslive`](documentation/geo2itslive_documentation.md)** transforms geographic coordinates to ITS\_LIVE velocity mosaic map projected coordinates [^1].
 
 **[`itslive_data`](documentation/itslive_data_documentation.md)** loads ITS\_LIVE velocity mosaic data.
 
