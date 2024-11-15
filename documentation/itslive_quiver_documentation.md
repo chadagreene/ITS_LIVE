@@ -1,7 +1,7 @@
 [&larr; Back to ITS\_LIVE main page](../README.md)
 
 # `itslive_quiver` documentation
-The `itslive_function` plots ITS\_LIVE summary velocity data in regionally projected map coordinates.
+The `itslive_quiver` plots ITS_LIVE velocity data as quiver arrows.
 
 *Tip: Zoom to desired map extents BEFORE calling `itslive_quiver`.*
 
@@ -41,7 +41,7 @@ exportgraphics(gcf,'itslive_quiver_documentation_jakobshavn_simple.jpg')
 ![](itslive_quiver_documentation_jakobshavn_simple.jpg)
 
 ## Example 2: Formatted arrows
-Repeat the example above, but this time make the arrows red and thicc: 
+Repeat the example above, but this time make the arrows red and thick: 
 
 ```matlab
 figure
