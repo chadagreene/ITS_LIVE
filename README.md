@@ -22,7 +22,7 @@ which automatically adds the path to the `data` folder and all of its subfolders
 
 **[`itslive_mosaic_downloader`](documentation/itslive_mosaic_downloader_documentation.md)** downloads all of the annual mosaics for a given region. 
 
-**[`itslive_regions`](documentation/itslive_regions_documentation.md)** displays a map of ITS\_LIVE regions, which approximately correspond to [Randolph Glacier Inventory v6](https://nsidc.org/data/nsidc-0770/versions/6) regions. 
+**[`itslive_regions`](documentation/itslive_regions_documentation.md)** displays ITS\_LIVE regions that follow [Randolph Glacier Inventory v6](https://nsidc.org/data/nsidc-0770/versions/6) conventions.
 
 **[`itslive2geo`](documentation/itslive2geo_documentation.md)** transforms projected map coordinates to geographic coordinates[^1].
 
