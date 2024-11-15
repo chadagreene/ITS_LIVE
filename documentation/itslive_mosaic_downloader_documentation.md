@@ -1,7 +1,7 @@
 [&larr; Back to ITS\_LIVE main page](../README.md)
 
 # `itslive_mosaic_downloader` documentation
-The `itslive2geo` function transforms projected map coordinates to geographic coordinates. 
+The `itslive_mosaic_downloader` function downloads all of the annual mosaics for a specified region.
 
 ## Syntax
 
@@ -13,9 +13,9 @@ itslive_mosaic_downloader(..., path=targetPath)
 
 ## Description 
 
-`itslive_mosaic_downloader(region)` downloads the summary mosaic for a specified region. The region must be a number in the range of 1 to 19, where 1 is Alaska and 19 is Antarctica. For a map of ITS\_LIVE regions, type [`itslive_regions`](itslive_regions_documentation.md). 
+`itslive_mosaic_downloader(region)` downloads the climatology mosaic for a specified region. The region must be a number in the range of 1 to 19, where 1 is Alaska and 19 is Antarctica. For a map of ITS\_LIVE regions, type [`itslive_regions`](itslive_regions_documentation.md). 
 
-`itslive_mosaic_downloader(..., year=years)` specifies the year(s) of data to download. If the year is not specified, the 0000 summary mosaic is downloaded. 
+`itslive_mosaic_downloader(..., year=years)` specifies the year(s) of data to download. If the year is not specified, the 0000 climatology mosaic is downloaded. 
 
 `itslive_mosaic_downloader(..., path=targetPath)` specifies a target directory for the data. If the path is not specified, the current working directory is used. 
 
