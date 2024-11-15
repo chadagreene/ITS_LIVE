@@ -24,9 +24,9 @@ which automatically adds the path to the `data` folder and all of its subfolders
 
 **[`itslive_regions`](documentation/itslive_regions_documentation.md)** displays a map of ITS\_LIVE regions, which approximately correspond to [Randolph Glacier Inventory v6](https://nsidc.org/data/nsidc-0770/versions/6) regions. 
 
-**[`itslive2geo`](documentation/itslive2geo_documentation.md)** transforms projected map coordinates to geographic coordinates. (Requires MATLAB's Mapping Toolbox)
+**[`itslive2geo`](documentation/itslive2geo_documentation.md)** transforms projected map coordinates to geographic coordinates[^1].
 
-**[`geo2itslive`](documentation/geo2itslive_documentation.md)** transforms geographic coordinates to projected map coordinates corresponding to a given ITS\_LIVE velocity mosaic region. (Requires MATLAB's Mapping Toolbox)
+**[`geo2itslive`](documentation/geo2itslive_documentation.md)** transforms geographic coordinates to projected map coordinates corresponding to a given ITS\_LIVE velocity mosaic region[^1].
 
 **[`itslive_data`](documentation/itslive_data_documentation.md)** loads ITS\_LIVE velocity mosaic data.
 
@@ -37,6 +37,8 @@ which automatically adds the path to the `data` folder and all of its subfolders
 **[`itslive_quiver`](documentation/itslive_quiver_documentation.md)** plots ITS\_LIVE velocity data as quiver arrows. 
 
 **[`itslive_flowline`](documentation/itslive_flowline_documentation.md)** calculates flowlines from ITS\_LIVE velocity mosaics. 
+
+[^1]:Requires MATLAB's Mapping Toolbox
 
 # Major Updates 
 This repository and the functions in it were initially developed in 2019 for the release of ITS\_LIVE version 1. The mosaics in ITS\_LIVE version 2 have now been revamped, variable names changed, file naming conventions changed, and most of the old functions required significant changes to work with the new mosaics. Accordingly, the version 2.0 updates to this repo in November 2024 contain many breaking changes from previous versions. 
