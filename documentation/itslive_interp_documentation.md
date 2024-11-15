@@ -22,7 +22,7 @@ v_across = = itslive_interp(region,'across',...)
 
 `zi = itslive_interp(..., method=InterpMethod)` specifies an interpolation  method. Interpolation is linear by default, except for variables `'landice'`,  and `'floatingice'`, which are nearest neighbor. 
 
-`zi = itslive_interp(...,'year',years)` specifies years of velocity mosaics. Default year is `0000`, which corresponds to summary mosaics. 
+`zi = itslive_interp(...,'year',years)` specifies years of velocity mosaics. Default year is `0000`, which corresponds to climatology mosaics. 
 
 `v_across = itslive_interp(region, 'across',...)` calculates the across-track velocity for a path such as a grounding line `lati,loni` or `xi,yi`. This is designed for calculating the flow across a flux gate. 
 
@@ -46,7 +46,7 @@ exportgraphics(gcf,'itslive_interp_documentation_byrd.jpg')
 ```
 ![](itslive_interp_documentation_byrd.jpg)
 
-## Example 2: Summary velocity values at Malaspina Glacier, Alaska 
+## Example 2: Climatology velocity values at Malaspina Glacier, Alaska 
 
 In the example above, we plotted a time series of annual velocities at a single location. Now let's plot the summary mosaic values (a multi-year average) for multiple locations at Malaspina Glacier, Alaska (region 1). These are the same locations that are plotted as the [default example in the ITS\_LIVE widget](https://its-live.jpl.nasa.gov/app/index.html?lat=60.08343&lon=-140.46707&lat=60.02582&lon=-140.57831&lat=59.92546&lon=-140.72388&lat=59.83722&lon=-140.80765&z=9&x=1982-12-08&x=2025-04-25&y=-404&y=5915). These locations on Malaspina are also used in the [`itslive_data`](itslive_data_documentation.md) documentation to create this map: 
 
