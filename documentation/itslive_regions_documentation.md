@@ -1,7 +1,7 @@
 [&larr; Back to ITS\_LIVE main page](../README.md)
 
 # `itslive_regions` documentation
-The `itslive2geo` function displays a world map with ITS\_LIVE mosaic regions labeled. 
+The `itslive_regions` function displays a world map with ITS\_LIVE mosaic regions labeled. 
 
 ## Syntax
 
@@ -17,7 +17,7 @@ h = itslive_regions
 `h = itslive_regions` also returns a handle `h` of the plotted object. 
 
 ## Example
-Here's how you show the ITS\_LIVE regions in MATLAB: 
+Here's how to show the ITS\_LIVE regions in MATLAB: 
 
 ```matlab
 itslive_regions
