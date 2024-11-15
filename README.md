@@ -2,14 +2,14 @@
 
 ![](ITS\_LIVE_v2_mosaic_regions.jpeg)
 
-The MATLAB functions in this repository are designed to make it easy and efficient to work with [ITS\_LIVE](https://its-live.jpl.nasa.gov/) version 2 velocity mosaic data. 
+The MATLAB functions in this repository are designed to make it easy and efficient to work with [ITS\_LIVE](https://its-live.jpl.nasa.gov/) version 2 annual and climatology velocity mosaic data. 
 
 # Data access/download
 
-Get the ITS\_LIVE v2 velocity mosaics in any of these ways: 
+Get ITS\_LIVE v2 velocity mosaics in any of these ways: 
 
-* Explore and download velocity mosaics in NetCDF format through the [NSIDC ITS\_LIVE app](https://nsidc.org/apps/itslive), 
-* Download the annual and static mosaics [directly from from AWS](https://its-live-data.s3.amazonaws.com/index.html#velocity_mosaic/v2/), or 
+* Explore and download velocity mosaics in NetCDF or Cloud Optimized GeoTiff (COG) format through the [NSIDC ITS\_LIVE app](https://nsidc.org/apps/itslive), 
+* Download the annual and climatology mosaics [directly from from AWS](https://its-live-data.s3.amazonaws.com/index.html#velocity_mosaic/), or 
 * If you know which region and years of mosaics you want, use the [`itslive_mosaic_downloader`](documentation/itslive_mosaic_downloader_documentation.md) function included in this repo.  
 
 After downloading the data, put the NetCDF(s) somewhere MATLAB can find them. I personally have a folder called `data`, and I have a [`startup.m`](https://www.mathworks.com/help/matlab/ref/startup.html) file in my home directory that contains this line:
@@ -20,9 +20,9 @@ which automatically adds the path to the `data` folder and all of its subfolders
 
 # Functions 
 
-**[`itslive_mosaic_downloader`](documentation/itslive_mosaic_downloader_documentation.md)** downloads all of the annual mosaics for any specified region. 
+**[`itslive_mosaic_downloader`](documentation/itslive_mosaic_downloader_documentation.md)** downloads all of the annual mosaics for a given region. 
 
-**[`itslive_regions`](documentation/itslive_regions_documentation.md)** displays a map of ITS\_LIVE regions, which approximately correspond to RGI regions. 
+**[`itslive_regions`](documentation/itslive_regions_documentation.md)** displays a map of ITS\_LIVE regions, which approximately correspond to [Randolph Glacier Inventory v6](https://nsidc.org/data/nsidc-0770/versions/6) regions. 
 
 **[`itslive2geo`](documentation/itslive2geo_documentation.md)** transforms projected map coordinates to geographic coordinates. (Requires MATLAB's Mapping Toolbox)
 
@@ -42,7 +42,7 @@ which automatically adds the path to the `data` folder and all of its subfolders
 This repository and the functions in it were initially developed in 2019 for the release of ITS\_LIVE version 1. The mosaics in ITS\_LIVE version 2 have now been revamped, variable names changed, file naming conventions changed, and most of the old functions required significant changes to work with the new mosaics. Accordingly, the version 2.0 updates to this repo in November 2024 contain many breaking changes from previous versions. 
 
 # Citing this dataset 
-The ITS\_LIVE data and these functions are provided free of charge. All we ask is that you please cite the dataset, and if relevant cite my Antarctic Mapping Tools paper too. Wording might be something like, "Velocity data generated using auto-RIFT (Gardner et al., 2018) and provided by the NASA MEaSUREs ITS\_LIVE project (Gardner et al., 2019). Analysis was performed with Antarctic Mapping Tools for Matlab (Greene et al., 2017)"
+The ITS\_LIVE data and these functions are free for all to use. We do ask that you please cite the dataset, and if relevant cite my Antarctic Mapping Tools paper too. Wording might be something like, "Velocity data generated using auto-RIFT (Gardner et al., 2018) and provided by the NASA MEaSUREs ITS\_LIVE project (Gardner et al., 2019). Analysis was performed with Antarctic Mapping Tools for Matlab (Greene et al., 2017)"
 
 Gardner, A. S., M. A. Fahnestock, and T. A. Scambos, 2019 [update to time of data download]: ITS\_LIVE Regional Glacier and Ice Sheet Surface Velocities. Data archived at National Snow and Ice Data Center; doi:10.5067/6II6VW8LLWJ7.
 
