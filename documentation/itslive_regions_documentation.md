@@ -24,6 +24,10 @@ itslive_regions
 ```
 ![](../ITS_LIVE_v2_mosaic_regions.jpeg)
 
+In the image above, each colored rectangle represents an ITS\_LIVE mosaic region. For example, RGI01A corresponds to Region 1 in the syntax of the MATLAB functions in this repository. 
+
+Some 100 km by 100 km black squares fall outside the ITS\_LIVE mosaic regions. In those locations, the full record of velocity data are available in Zarr and NetCDF format as Level 2 image-pair data, but are not provided as mosaicked data. 
+
 To explore what data are available, check out [https://its-live-data.s3.amazonaws.com/index.html](https://its-live-data.s3.amazonaws.com/index.html).   
 
 # Author Info
