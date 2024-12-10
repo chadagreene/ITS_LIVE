@@ -18,6 +18,10 @@ After downloading the data, put the NetCDF(s) somewhere MATLAB can find them. I 
 
 which automatically adds the path to the `data` folder and all of its subfolders every time I start MATLAB. 
 
+# Video Tutorial
+
+[![How to analyze trends in sea surface temperature using CDT](https://img.youtube.com/vi/kRPNxrGfYrA/0.jpg)](https://www.youtube.com/watch?v=kRPNxrGfYrA "ITS_LIVE - MATLAB Tutorial")
+
 # Functions 
 
 **[`itslive_mosaic_downloader`](documentation/itslive_mosaic_downloader_documentation.md)** downloads all of the annual mosaics for a given region. 
