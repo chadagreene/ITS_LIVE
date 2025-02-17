@@ -30,7 +30,7 @@ which automatically adds the path to the `data` folder and all of its subfolders
 
 **[`itslive2geo`](documentation/itslive2geo_documentation.md)** transforms projected map coordinates to geographic coordinates[^1].
 
-**[`geo2itslive`](documentation/geo2itslive_documentation.md)** transforms geographic coordinates to ITS\_LIVE velocity mosaic map projected coordinates [^1].
+**[`geo2itslive`](documentation/geo2itslive_documentation.md)** transforms geographic coordinates to ITS\_LIVE velocity mosaic map projected coordinates[^1].
 
 **[`itslive_data`](documentation/itslive_data_documentation.md)** loads ITS\_LIVE velocity mosaic data.
 
@@ -41,6 +41,8 @@ which automatically adds the path to the `data` folder and all of its subfolders
 **[`itslive_quiver`](documentation/itslive_quiver_documentation.md)** plots ITS\_LIVE velocity data as quiver arrows. 
 
 **[`itslive_flowline`](documentation/itslive_flowline_documentation.md)** calculates flowlines from ITS\_LIVE velocity mosaics. 
+
+**[`itslive_timeseries`](documentation/itslive_timeseries_documentation.md)** creates continuous velocity time series at a single location by combining annual mosaic velocities with seasonal climatology. 
 
 [^1]:Requires MATLAB's Mapping Toolbox
 
