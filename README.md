@@ -46,14 +46,16 @@ which automatically adds the path to the `data` folder and all of its subfolders
 
 [^1]:Requires MATLAB's Mapping Toolbox
 
-# Major Updates 
-This repository and the functions in it were initially developed in 2019 for the release of ITS\_LIVE version 1. The mosaics in ITS\_LIVE version 2 have now been revamped, variable names changed, file naming conventions changed, and most of the old functions required significant changes to work with the new mosaics. Accordingly, the version 2.0 updates to this repo in November 2024 contain many breaking changes from previous versions. 
+# Updates to the MATLAB functions (November 2024)
+This repository and the functions in it were initially developed in 2019 for the release of ITS\_LIVE version 1. The mosaics in ITS\_LIVE version 2 have been revamped, variable names changed, file naming conventions changed, and most of the old functions required significant changes to work with the new mosaics. Accordingly, the version 2.0 updates to this repo in November 2024 contain many breaking changes from previous versions. 
+
+# Data Description
+
+Most of what you could possibly want to know about ITS\_LIVE v2 can be found in the [Gardner et al.](https://doi.org/10.5194/egusphere-2025-392) manuscript currently in open review for _The Cryosphere_. Happy reading!  
 
 # Citing this dataset 
-The ITS\_LIVE data and these functions are free for all to use. We do ask that you please cite the dataset, and if relevant cite my Antarctic Mapping Tools paper too. Wording might be something like, "Velocity data generated using auto-RIFT (Gardner et al., 2018) and provided by the NASA MEaSUREs ITS\_LIVE project (Gardner et al., 2019). Analysis was performed with Antarctic Mapping Tools for Matlab (Greene et al., 2017)"
+The ITS\_LIVE data and these functions are free for all to use. We just ask that you cite the following: 
+
+Gardner, A. S., Greene, C. A., Kennedy, J. H., Fahnestock, M. A., Liukis, M., López, L. A., Lei, Y., Scambos, T. A., and Dehecq, A.: ITS_LIVE global glacier velocity data in near real time, EGUsphere [preprint], [https://doi.org/10.5194/egusphere-2025-392](https://doi.org/10.5194/egusphere-2025-392), 2025. 
 
 Gardner, A. S., M. A. Fahnestock, and T. A. Scambos, 2019 [update to time of data download]: ITS\_LIVE Regional Glacier and Ice Sheet Surface Velocities. Data archived at National Snow and Ice Data Center; doi:10.5067/6II6VW8LLWJ7.
-
-Gardner, A. S., G. Moholdt, T. Scambos, M. Fahnstock, S. Ligtenberg, M. van den Broeke, and J. Nilsson, 2018: Increased West Antarctic and unchanged East Antarctic ice discharge over the last 7 years, _Cryosphere,_ 12(2): 521–547, doi:10.5194/tc-12-521-2018.
-
-Greene, C. A., D. E. Gwyther, and D. D. Blankenship, 2017 “Antarctic Mapping Tools for Matlab.” _Computers & Geosciences,_ (104) 151–157, doi:10.1016/j.cageo.2016.08.003.

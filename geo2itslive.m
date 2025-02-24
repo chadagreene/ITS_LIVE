@@ -33,6 +33,14 @@ function [x, y] = geo2itslive(region, lat, lon)
 %  lon =
 %   -140.4671
 % 
+%% Citing this data
+% If you use ITS_LIVE v2 velocity data, please cite:  
+%
+% Gardner, A. S., Greene, C. A., Kennedy, J. H., Fahnestock, M. A., Liukis, 
+% M., López, L. A., Lei, Y., Scambos, T. A., and Dehecq, A.: ITS_LIVE global 
+% glacier velocity data in near real time, EGUsphere [preprint], 
+% https://doi.org/10.5194/egusphere-2025-392, 2025. 
+%
 %% Author Info 
 % Written by Chad A. Greene, NASA/JPL, 2024. 
 

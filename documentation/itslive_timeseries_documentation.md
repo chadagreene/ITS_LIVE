@@ -58,6 +58,9 @@ xlabel(cb,'dt (days)')
 
 Note: Above, we've plotted velocity values on a color scale representing the time between image pairs dt, and we've used `scatter3` to stack the markers in a way that shorter dt values appear at the top of the graphical stack (by plotting negative dt values). The rationale here is because one-year dt values cannot, by definition, contain any type of seasonal variability. That's why the longer dt values increase and decrease smoothly, without the seasonal spikes and troughs. Very short dt values, however, may be associated with greater error, because a given displacement error over a shorter dt create a larger velocity error. Finding the perfect thresholds for which dt image pairs to include and which exclude may require some manual tuning for your specific application. 
 
-# Author Info
-The MATLAB functions in this repo and this documentation were written by Chad A. Greene of NASA/JPL. [The NASA MEaSUREs ITS\_LIVE project](https://its-live.jpl.nasa.gov/) is by Alex S. Gardner and the ITS\_LIVE team. 
+# Author & Citation Info
+The MATLAB functions in this repo and this documentation were written by Chad A. Greene of NASA/JPL. [The NASA MEaSUREs ITS\_LIVE project](https://its-live.jpl.nasa.gov/) is by Alex S. Gardner and the ITS\_LIVE team. If you use ITS\_LIVE v2 velocity data, please cite: 
+
+Gardner, A. S., Greene, C. A., Kennedy, J. H., Fahnestock, M. A., Liukis, M., López, L. A., Lei, Y., Scambos, T. A., and Dehecq, A.: ITS_LIVE global glacier velocity data in near real time, EGUsphere [preprint], [https://doi.org/10.5194/egusphere-2025-392](https://doi.org/10.5194/egusphere-2025-392), 2025. 
+
 [^1]: (Requires MATLAB's Mapping Toolbox)

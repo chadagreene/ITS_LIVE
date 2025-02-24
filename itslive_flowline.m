@@ -41,16 +41,12 @@ function [lat_or_x,lon_or_y,d,v] = itslive_flowline(region,lati_or_xi,loni_or_yi
 % https://github.com/chadagreene/ITS_LIVE.
 % 
 %% Citing this data
-% If this function is helpful for you, please cite
-% 
-% Gardner, A. S., M. A. Fahnestock, and T. A. Scambos, 2019 [update to time 
-% of data download]: ITS_LIVE Regional Glacier and Ice Sheet Surface Velocities.
-% Data archived at National Snow and Ice Data Center; doi:10.5067/6II6VW8LLWJ7.
+% If you use ITS_LIVE v2 velocity data, please cite:  
 %
-% Gardner, A. S., G. Moholdt, T. Scambos, M. Fahnstock, S. Ligtenberg, M. van
-% den Broeke, and J. Nilsson, 2018: Increased West Antarctic and unchanged 
-% East Antarctic ice discharge over the last 7 years, _Cryosphere,_ 12(2): 
-% 21?547, doi:10.5194/tc-12-521-2018.
+% Gardner, A. S., Greene, C. A., Kennedy, J. H., Fahnestock, M. A., Liukis, 
+% M., López, L. A., Lei, Y., Scambos, T. A., and Dehecq, A.: ITS_LIVE global 
+% glacier velocity data in near real time, EGUsphere [preprint], 
+% https://doi.org/10.5194/egusphere-2025-392, 2025. 
 %
 %% Author Info
 % This function was written by Chad A. Greene of NASA/JPL, November 2024. 
