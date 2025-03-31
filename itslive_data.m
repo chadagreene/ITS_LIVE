@@ -211,6 +211,8 @@ Z = NaN(numel(ci),numel(ri),numel(options.year));
 for k = 1:numel(options.year) 
     fn = fullfile(options.filepath,['ITS_LIVE_velocity_120m_RGI',num2str(region,'%02.f'),'A_',num2str(options.year(k),'%04.f'),'_v02.nc']); 
     Z(:,:,k) = permute(ncread(fn,variable,[ri(1) ci(1)],[length(ri) length(ci)]),[2 1 3]);
+
+    Z(abs(Z)==32767) = NaN; 
 end
 
 if ismember(lower(variable),{'sensor_flag','floatingice','landice'})
