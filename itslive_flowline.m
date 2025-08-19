@@ -88,15 +88,15 @@ count    = itslive_data(region,  'count','xlim',xi,'ylim',yi,'buffer',buffer);
 v_error  = itslive_data(region,'v_error','xlim',xi,'ylim',yi,'buffer',buffer); 
 
 % Eliminate slow-moving, non-ice, and low-confidence data: 
-bad = V<10 | count<100 | v_error>100 | ~landice; 
+bad = V<10 | count<100 | v_error>(100 + 0.1*V) | ~landice; 
 vx(bad) = nan; 
 vy(bad) = nan; 
 
 %% Compute streamlines: 
 
 % Backward motion, then forward motion: 
-XY_minus = cellfun(@flipud,stream2(x,y,-vx,-vy,xi,yi,[0.2 1e5]),'UniformOutput',false); 
-XY_plus = stream2(x,y,vx,vy,xi,yi,[0.2 1e5]); 
+XY_minus = cellfun(@flipud,stream2(x,y,-vx,-vy,xi,yi,[0.2 1e6]),'UniformOutput',false); 
+XY_plus = stream2(x,y,vx,vy,xi,yi,[0.2 1e6]); 
 
 XY_minus = reshape(XY_minus,size(xi)); 
 XY_plus = reshape(XY_plus,size(xi)); 
