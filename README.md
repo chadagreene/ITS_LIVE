@@ -44,7 +44,7 @@ which automatically adds the path to the `data` folder and all of its subfolders
 
 **[`itslive_timeseries`](documentation/itslive_timeseries_documentation.md)** creates continuous velocity time series at a single location by combining annual mosaic velocities with seasonal climatology. 
 
-[^1]:Requires MATLAB's Mapping Toolbox
+[^1]: Requires MATLAB's Mapping Toolbox
 
 # Updates to the MATLAB functions (November 2024)
 This repository and the functions in it were initially developed in 2019 for the release of ITS\_LIVE version 1. The mosaics in ITS\_LIVE version 2 have been revamped, variable names changed, file naming conventions changed, and most of the old functions required significant changes to work with the new mosaics. Accordingly, the version 2.0 updates to this repo in November 2024 contain many breaking changes from previous versions. 
@@ -56,6 +56,5 @@ Most of what you could possibly want to know about ITS\_LIVE v2 can be found in 
 # Citing this dataset 
 The ITS\_LIVE data and these functions are free for all to use. We just ask that you cite the following: 
 
-Gardner, A. S., Greene, C. A., Kennedy, J. H., Fahnestock, M. A., Liukis, M., López, L. A., Lei, Y., Scambos, T. A., and Dehecq, A.: ITS_LIVE global glacier velocity data in near real time, EGUsphere [preprint], [https://doi.org/10.5194/egusphere-2025-392](https://doi.org/10.5194/egusphere-2025-392), 2025. 
-
-Gardner, A. S., M. A. Fahnestock, and T. A. Scambos, 2019 [update to time of data download]: ITS\_LIVE Regional Glacier and Ice Sheet Surface Velocities. Data archived at National Snow and Ice Data Center; doi:10.5067/6II6VW8LLWJ7.
+* Gardner, A. S., Greene, C. A., Kennedy, J. H., Fahnestock, M. A., Liukis, M., López, L. A., Lei, Y., Scambos, T. A., and Dehecq, A.: ITS_LIVE global glacier velocity data in near-real time, The Cryosphere, 19, 3517–3533, [https://doi.org/10.5194/tc-19-3517-2025](https://doi.org/10.5194/tc-19-3517-2025), 2025. 
+* Gardner, A. S., M. A. Fahnestock, and T. A. Scambos, 2019 [update to time of data download]: ITS\_LIVE Regional Glacier and Ice Sheet Surface Velocities. Data archived at National Snow and Ice Data Center; doi:10.5067/6II6VW8LLWJ7.
